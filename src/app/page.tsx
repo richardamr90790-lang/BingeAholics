@@ -12,7 +12,7 @@ export default async function Home() {
     <main className="flex flex-1 items-center justify-center p-8">
       {user ? (
         <div className="w-full max-w-sm space-y-4 text-center">
-          <h1 className="text-2xl font-semibold">Recap Tracker</h1>
+          <h1 className="text-2xl font-semibold">Bingeaholics</h1>
           <p className="text-sm text-zinc-500">
             Signed in as <span className="font-medium">{user.email}</span>
           </p>

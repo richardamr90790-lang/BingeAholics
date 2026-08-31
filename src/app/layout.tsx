@@ -13,17 +13,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Recap Tracker",
-  description: "Track your progress through manhwa/anime recap videos.",
+  title: "Bingeaholics",
+  description: "Track your progress through recap video series.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="app-bg" aria-hidden="true" />
+        {children}
+      </body>
     </html>
   );
 }

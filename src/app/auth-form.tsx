@@ -51,7 +51,7 @@ export function AuthForm() {
   return (
     <div className="w-full max-w-sm space-y-6">
       <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-semibold">Recap Tracker</h1>
+        <h1 className="text-2xl font-semibold">Bingeaholics</h1>
         <p className="text-sm text-zinc-500">
           {mode === "signin"
             ? "Sign in to your account."
