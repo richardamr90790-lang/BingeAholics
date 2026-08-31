@@ -9,9 +9,9 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   return (
-    <main className="flex flex-1 items-center justify-center p-8">
+    <main className="flex flex-1 flex-col items-center px-6 py-6">
       {user ? (
-        <div className="w-full max-w-md space-y-4 rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center shadow-2xl backdrop-blur-xl">
+        <div className="m-auto w-full max-w-md space-y-4 rounded-2xl border border-white/10 bg-zinc-950/70 p-8 text-center shadow-2xl backdrop-blur-xl">
           <h1 className="text-2xl font-extrabold uppercase italic tracking-tight text-white">
             Bingeaholics
           </h1>
@@ -25,7 +25,9 @@ export default async function Home() {
           </form>
         </div>
       ) : (
-        <AuthForm />
+        <div className="mt-auto w-full max-w-md pb-24">
+          <AuthForm />
+        </div>
       )}
     </main>
   );
