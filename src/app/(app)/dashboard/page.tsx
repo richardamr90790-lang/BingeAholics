@@ -75,20 +75,21 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="space-y-8">
-        <div className="flex flex-col gap-4 lg:flex-row">
-          {/* Welcome + art banner */}
-          <section className="relative flex-1 overflow-hidden rounded-2xl border border-white/10">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: "url(/hero.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center 38%",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10] via-[#0a0a10]/75 to-[#0a0a10]/15" />
+        {/* Full-width hero banner: welcome on the left, stats on the right, one
+            continuous piece of artwork across the whole top */}
+        <section className="relative overflow-hidden rounded-2xl border border-white/10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: "url(/hero.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center 38%",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10]/95 via-[#0a0a10]/25 to-[#0a0a10]/70" />
 
-            <div className="relative p-6 sm:p-8">
+          <div className="relative flex flex-col lg:flex-row">
+            <div className="flex-1 p-6 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
                 Welcome back,
               </p>
@@ -121,34 +122,33 @@ export default async function DashboardPage() {
                 </div>
               </div>
             </div>
-          </section>
 
-          {/* Your Stats — pinned to the right edge */}
-          <aside className="w-full shrink-0 rounded-2xl border border-white/10 bg-[#14141c] p-5 lg:w-72">
-            <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-white">Your Stats</h2>
-              <span className="text-xs text-zinc-500">All time</span>
-            </div>
-            <ul className="mt-3 divide-y divide-white/5">
-              {statRows.map((r) => (
-                <li
-                  key={r.label}
-                  className="flex items-center justify-between py-3"
-                >
-                  <div>
-                    <p className="text-xs text-zinc-500">{r.label}</p>
-                    <p className="text-lg font-bold text-white">{r.value}</p>
-                  </div>
-                  <span
-                    className={`grid size-8 place-items-center rounded-lg bg-white/5 ${r.color}`}
+            <div className="w-full border-t border-white/10 bg-[#0a0a10]/55 p-5 backdrop-blur-sm lg:w-80 lg:border-l lg:border-t-0">
+              <div className="flex items-center justify-between">
+                <h2 className="font-semibold text-white">Your Stats</h2>
+                <span className="text-xs text-zinc-400">All time</span>
+              </div>
+              <ul className="mt-2 divide-y divide-white/10">
+                {statRows.map((r) => (
+                  <li
+                    key={r.label}
+                    className="flex items-center justify-between py-3"
                   >
-                    <r.Icon className="size-4" />
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </aside>
-        </div>
+                    <div>
+                      <p className="text-xs text-zinc-400">{r.label}</p>
+                      <p className="text-lg font-bold text-white">{r.value}</p>
+                    </div>
+                    <span
+                      className={`grid size-8 place-items-center rounded-lg bg-white/10 ${r.color}`}
+                    >
+                      <r.Icon className="size-4" />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
 
         <section>
           <div className="mb-3 flex items-center justify-between">
