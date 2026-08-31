@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { signIn, signUp, type AuthState } from "./actions";
 
 type Mode = "signin" | "signup";
@@ -77,6 +78,17 @@ export function AuthForm() {
 
       {/* key={mode} remounts the fields so stale errors clear on toggle */}
       <Fields key={mode} mode={mode} />
+
+      {mode === "signin" && (
+        <p className="text-center text-sm">
+          <Link
+            href="/forgot-password"
+            className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+          >
+            Forgot password?
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
