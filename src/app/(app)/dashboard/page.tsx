@@ -1,17 +1,30 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { displayName } from "@/lib/user";
 import {
+  CATEGORIES,
   getContinueWatching,
   getStats,
   listTitles,
+  type Category,
 } from "@/lib/data/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import {
+  TvIcon,
+  BookIcon,
+  HeadphonesIcon,
+  GamepadIcon,
+  GradCapIcon,
+} from "../_components/icons";
 
-function firstName(email: string) {
-  const raw = email.split("@")[0] ?? "there";
-  return raw.charAt(0).toUpperCase() + raw.slice(1);
-}
+const CATEGORY_ICON: Record<Category, typeof TvIcon> = {
+  watch: TvIcon,
+  read: BookIcon,
+  listen: HeadphonesIcon,
+  play: GamepadIcon,
+  learn: GradCapIcon,
+};
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -34,18 +47,47 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <section className="overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-br from-violet-900/40 via-[#14141c] to-[#14141c] p-6 sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
-          Welcome back,
-        </p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-white">
-          {firstName(user?.email ?? "there")}
-        </h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Track it all. Never lose your place again.
-        </p>
-        <div className="mt-5">
-          <AddTitleButton label="Add a title" />
+      <section className="relative overflow-hidden rounded-2xl border border-white/5 bg-[#12121a] p-6 sm:p-8">
+        <div className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-violet-600/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 right-24 size-72 rounded-full bg-indigo-600/15 blur-3xl" />
+        <svg
+          viewBox="0 0 24 24"
+          className="pointer-events-none absolute right-6 top-6 size-40 fill-white/[0.04]"
+          aria-hidden
+        >
+          <path d="M8 5.5c0-1.1 1.2-1.8 2.1-1.2l9 6c.9.6.9 1.9 0 2.4l-9 6c-1 .6-2.1-.1-2.1-1.2v-12Z" />
+        </svg>
+
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
+            Welcome back,
+          </p>
+          <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-white">
+            {displayName(user)}
+          </h1>
+          <p className="mt-2 text-sm text-zinc-400">
+            Track it all. Never lose your place again.
+          </p>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {CATEGORIES.map((c) => {
+              const Icon = CATEGORY_ICON[c.key];
+              return (
+                <Link
+                  key={c.key}
+                  href={`/library?category=${c.key}`}
+                  className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-zinc-200 transition hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white"
+                >
+                  <Icon className="size-4 text-violet-300" />
+                  {c.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-5">
+            <AddTitleButton label="Add a title" />
+          </div>
         </div>
       </section>
 

@@ -7,6 +7,8 @@ export type TitleType =
   | "book"
   | "video"
   | "podcast"
+  | "game"
+  | "course"
   | "other";
 
 export type TitleStatus =
@@ -41,6 +43,8 @@ export const TYPE_LABELS: Record<TitleType, string> = {
   book: "Book",
   video: "Video",
   podcast: "Podcast",
+  game: "Game",
+  course: "Course",
   other: "Other",
 };
 
@@ -51,6 +55,24 @@ export const STATUS_LABELS: Record<TitleStatus, string> = {
   on_hold: "On hold",
   dropped: "Dropped",
 };
+
+export type Category = "watch" | "read" | "listen" | "play" | "learn";
+
+export const CATEGORIES: {
+  key: Category;
+  label: string;
+  types: TitleType[];
+}[] = [
+  { key: "watch", label: "Watch", types: ["anime", "video"] },
+  { key: "read", label: "Read", types: ["manga", "manhwa", "book"] },
+  { key: "listen", label: "Listen", types: ["podcast"] },
+  { key: "play", label: "Play", types: ["game"] },
+  { key: "learn", label: "Learn", types: ["course"] },
+];
+
+export function categoryTypes(key: string): TitleType[] | null {
+  return CATEGORIES.find((c) => c.key === key)?.types ?? null;
+}
 
 export function progressPercent(
   t: Pick<Title, "current_unit" | "total_units">,

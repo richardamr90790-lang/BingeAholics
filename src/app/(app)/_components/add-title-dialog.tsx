@@ -13,6 +13,8 @@ const TYPE_DEFAULT_UNIT: Record<TitleType, string> = {
   book: "Page",
   video: "Part",
   podcast: "Episode",
+  game: "Chapter",
+  course: "Lesson",
   other: "Part",
 };
 

@@ -156,3 +156,49 @@ export function TrashIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function TvIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <rect x="3" y="6" width="18" height="12" rx="2" />
+      <path d="M8 21h8M12 3 8 6M12 3l4 3" />
+    </svg>
+  );
+}
+
+export function BookIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V4Z" />
+      <path d="M5 17h13" />
+    </svg>
+  );
+}
+
+export function HeadphonesIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+      <rect x="3" y="14" width="4" height="6" rx="1.5" />
+      <rect x="17" y="14" width="4" height="6" rx="1.5" />
+    </svg>
+  );
+}
+
+export function GamepadIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="M7 8h10a5 5 0 0 1 5 5v.5a3.5 3.5 0 0 1-6.3 2.1L15 14H9l-.7 1.6A3.5 3.5 0 0 1 2 13.5V13a5 5 0 0 1 5-5Z" />
+      <path d="M7 11v2M6 12h2M15 11h.01M17.5 13h.01" />
+    </svg>
+  );
+}
+
+export function GradCapIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="m12 4 10 5-10 5L2 9l10-5Z" />
+      <path d="M6 11v5c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-5" />
+    </svg>
+  );
+}

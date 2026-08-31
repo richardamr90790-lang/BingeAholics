@@ -9,7 +9,6 @@ const SECTIONS: Record<string, string> = {
   history: "History",
   stats: "Stats",
   calendar: "Calendar",
-  settings: "Settings",
 };
 
 export function generateStaticParams() {

@@ -1,16 +1,27 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Title, TitleType, TitleStatus } from "@/lib/titles";
 
-export type { Title, TitleType, TitleStatus } from "@/lib/titles";
-export { TYPE_LABELS, STATUS_LABELS, progressPercent } from "@/lib/titles";
+export type { Title, TitleType, TitleStatus, Category } from "@/lib/titles";
+export {
+  TYPE_LABELS,
+  STATUS_LABELS,
+  CATEGORIES,
+  categoryTypes,
+  progressPercent,
+} from "@/lib/titles";
 
-export async function listTitles(opts?: { type?: TitleType }): Promise<Title[]> {
+export async function listTitles(opts?: {
+  type?: TitleType;
+  types?: TitleType[];
+}): Promise<Title[]> {
   const supabase = await createClient();
   let query = supabase
     .from("titles")
     .select("*")
     .order("updated_at", { ascending: false });
   if (opts?.type) query = query.eq("type", opts.type);
+  else if (opts?.types && opts.types.length > 0)
+    query = query.in("type", opts.types);
   const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as Title[];

@@ -115,3 +115,14 @@ export async function deleteTitle(id: string): Promise<ActionResult> {
 
   revalidateApp();
 }
+
+export async function updateDisplayName(name: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const clean = name.trim().slice(0, 40);
+  const { error } = await supabase.auth.updateUser({
+    data: { display_name: clean },
+  });
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+}
