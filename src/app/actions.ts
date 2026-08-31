@@ -4,12 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export type AuthState = { error?: string; notice?: string } | null;
+export type AuthState = { error?: string; notice?: string; ok?: boolean } | null;
 
-export async function signIn(
-  _prev: AuthState,
-  formData: FormData,
-): Promise<AuthState> {
+export async function signIn(formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -18,13 +15,10 @@ export async function signIn(
   if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { ok: true };
 }
 
-export async function signUp(
-  _prev: AuthState,
-  formData: FormData,
-): Promise<AuthState> {
+export async function signUp(formData: FormData): Promise<AuthState> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -35,11 +29,13 @@ export async function signUp(
   // If "Confirm email" is enabled in Supabase, signUp succeeds but returns no
   // session until the user confirms via email.
   if (!data.session) {
-    return { notice: "Account created. Check your email to confirm, then sign in." };
+    return {
+      notice: "Account created. Check your email to confirm, then sign in.",
+    };
   }
 
   revalidatePath("/", "layout");
-  redirect("/");
+  return { ok: true };
 }
 
 export async function signOut() {

@@ -78,20 +78,6 @@ export default async function DashboardPage() {
 
   return (
     <>
-      {/* One continuous, viewport-anchored wallpaper behind the whole dashboard */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url(/hero.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-[#0a0a10]/60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a10]/35 via-[#0a0a10]/55 to-[#0a0a10]/80" />
-      </div>
-
       <div className="space-y-8">
         <div className="grid gap-4 lg:grid-cols-3">
           {/* Hero */}

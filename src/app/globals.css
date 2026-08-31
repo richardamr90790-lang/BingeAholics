@@ -25,20 +25,41 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Full-page background image sitting behind all content. The dark gradient on
-   top keeps the forms readable. If /background.jpg is missing, the gradient +
-   background-color still render a plain dark backdrop. */
+/* The one continuous "world" backdrop, shared by the login screen and every
+   signed-in page so entering the app feels like stepping into the same scene.
+   The gradient over it keeps content readable. */
 .app-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   background-color: var(--background);
   background-image: linear-gradient(
-      rgba(10, 10, 12, 0.15),
-      rgba(10, 10, 12, 0.4)
+      rgba(10, 10, 16, 0.5),
+      rgba(10, 10, 16, 0.78)
     ),
-    url("/background.png");
+    url("/hero.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+/* Sign-in "step through the doorway" transition. */
+@keyframes enter-world {
+  0% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="enter-world"] {
+    animation: none !important;
+  }
 }

@@ -15,7 +15,7 @@ export default async function AppLayout({
   if (!user) redirect("/");
 
   return (
-    <div className="relative z-0 flex min-h-screen bg-[#0b0b12] text-zinc-100">
+    <div className="relative z-0 flex min-h-screen text-zinc-100">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar email={user.email ?? ""} />
