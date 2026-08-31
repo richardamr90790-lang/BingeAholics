@@ -80,13 +80,13 @@ export default async function DashboardPage() {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: "url(/background.png)",
-              backgroundSize: "175%",
-              backgroundPosition: "50% 92%",
+              backgroundImage: "url(/hero.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center 38%",
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10] via-[#0a0a10]/80 to-[#0a0a10]/25" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a10]/75 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10]/95 via-[#0a0a10]/60 to-[#0a0a10]/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a10]/70 to-transparent" />
 
           <div className="relative flex h-full flex-col p-6 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
