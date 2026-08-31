@@ -32,7 +32,9 @@ function ForgotPasswordForm() {
       setMessage(error.message);
     } else {
       setStatus("sent");
-      setMessage("If that email has an account, a reset link is on its way.");
+      setMessage(
+        "If that email has an account, a reset link is on its way. Open it in this browser.",
+      );
     }
   }
 
@@ -68,6 +70,12 @@ function ForgotPasswordForm() {
           {status === "sending" ? "…" : "Send reset link"}
         </button>
       </form>
+
+      <p className="rounded-md bg-amber-500/10 px-3 py-2 text-xs text-amber-600 dark:text-amber-500">
+        Heads up: open the reset link in <strong>this same browser</strong>. For
+        security, a link opened in a different browser or on another device
+        won&apos;t work — you&apos;d just need to request a new one here.
+      </p>
 
       {message && (
         <p
