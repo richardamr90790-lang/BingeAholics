@@ -29,7 +29,7 @@ export function TitleCard({ title: t }: { title: Title }) {
   const atEnd = t.total_units != null && t.current_unit >= t.total_units;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-white/5 bg-[#14141c] transition hover:border-white/10">
+    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0e0e16]/55 backdrop-blur-md transition hover:border-white/20">
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900">
         {t.cover_url ? (
           // eslint-disable-next-line @next/next/no-img-element

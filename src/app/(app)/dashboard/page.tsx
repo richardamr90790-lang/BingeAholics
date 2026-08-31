@@ -33,6 +33,10 @@ const CATEGORY_STYLE: Record<
   learn: { Icon: GradCapIcon, color: "text-amber-400" },
 };
 
+// Shared glass-panel surface so the wallpaper stays subtly visible through cards.
+const PANEL =
+  "rounded-2xl border border-white/10 bg-[#0e0e16]/55 shadow-xl backdrop-blur-md";
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -73,22 +77,25 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="grid gap-4 lg:grid-cols-3">
-        {/* Hero */}
-        <section className="relative min-h-[14rem] overflow-hidden rounded-2xl border border-white/5 lg:col-span-2">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: "url(/hero.png)",
-              backgroundSize: "cover",
-              backgroundPosition: "center 38%",
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10]/95 via-[#0a0a10]/60 to-[#0a0a10]/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a10]/70 to-transparent" />
+    <>
+      {/* One continuous, viewport-anchored wallpaper behind the whole dashboard */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url(/hero.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-[#0a0a10]/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a10]/35 via-[#0a0a10]/55 to-[#0a0a10]/80" />
+      </div>
 
-          <div className="relative flex h-full flex-col p-6 sm:p-8">
+      <div className="space-y-8">
+        <div className="grid gap-4 lg:grid-cols-3">
+          {/* Hero */}
+          <section className={`${PANEL} lg:col-span-2 p-6 sm:p-8`}>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
               Welcome back,
             </p>
@@ -99,7 +106,7 @@ export default async function DashboardPage() {
               Track it all. Never lose your place again.
             </p>
 
-            <div className="mt-auto flex flex-wrap items-start gap-6 pt-6">
+            <div className="mt-6 flex flex-wrap items-start gap-6">
               {CATEGORIES.map((c) => {
                 const { Icon, color } = CATEGORY_STYLE[c.key];
                 return (
@@ -120,91 +127,93 @@ export default async function DashboardPage() {
                 <AddTitleButton label="Add a title" />
               </div>
             </div>
+          </section>
+
+          {/* Your Stats */}
+          <aside className={`${PANEL} p-5`}>
+            <div className="flex items-center justify-between">
+              <h2 className="font-semibold text-white">Your Stats</h2>
+              <span className="text-xs text-zinc-500">All time</span>
+            </div>
+            <ul className="mt-3 divide-y divide-white/5">
+              {statRows.map((r) => (
+                <li
+                  key={r.label}
+                  className="flex items-center justify-between py-3"
+                >
+                  <div>
+                    <p className="text-xs text-zinc-500">{r.label}</p>
+                    <p className="text-lg font-bold text-white">{r.value}</p>
+                  </div>
+                  <span
+                    className={`grid size-8 place-items-center rounded-lg bg-white/5 ${r.color}`}
+                  >
+                    <r.Icon className="size-4" />
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">
+              Continue Watching
+            </h2>
+            <Link
+              href="/library"
+              className="text-sm text-violet-400 hover:text-violet-300"
+            >
+              View all
+            </Link>
           </div>
+          {continueWatching.length === 0 ? (
+            <EmptyState
+              message={
+                stats.total === 0
+                  ? "Nothing tracked yet."
+                  : "Nothing in progress. Bump a title to get going."
+              }
+            />
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {continueWatching.map((t) => (
+                <TitleCard key={t.id} title={t} />
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* Your Stats */}
-        <aside className="rounded-2xl border border-white/5 bg-[#14141c] p-5">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-white">Your Stats</h2>
-            <span className="text-xs text-zinc-500">All time</span>
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-white">My Library</h2>
+            <Link
+              href="/library"
+              className="text-sm text-violet-400 hover:text-violet-300"
+            >
+              View all
+            </Link>
           </div>
-          <ul className="mt-3 divide-y divide-white/5">
-            {statRows.map((r) => (
-              <li
-                key={r.label}
-                className="flex items-center justify-between py-3"
-              >
-                <div>
-                  <p className="text-xs text-zinc-500">{r.label}</p>
-                  <p className="text-lg font-bold text-white">{r.value}</p>
-                </div>
-                <span
-                  className={`grid size-8 place-items-center rounded-lg bg-white/5 ${r.color}`}
-                >
-                  <r.Icon className="size-4" />
-                </span>
-              </li>
-            ))}
-          </ul>
-        </aside>
+          {library.length === 0 ? (
+            <EmptyState message="Your library is empty." />
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+              {library.slice(0, 12).map((t) => (
+                <TitleCard key={t.id} title={t} />
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Continue Watching</h2>
-          <Link
-            href="/library"
-            className="text-sm text-violet-400 hover:text-violet-300"
-          >
-            View all
-          </Link>
-        </div>
-        {continueWatching.length === 0 ? (
-          <EmptyState
-            message={
-              stats.total === 0
-                ? "Nothing tracked yet."
-                : "Nothing in progress. Bump a title to get going."
-            }
-          />
-        ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {continueWatching.map((t) => (
-              <TitleCard key={t.id} title={t} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">My Library</h2>
-          <Link
-            href="/library"
-            className="text-sm text-violet-400 hover:text-violet-300"
-          >
-            View all
-          </Link>
-        </div>
-        {library.length === 0 ? (
-          <EmptyState message="Your library is empty." />
-        ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {library.slice(0, 12).map((t) => (
-              <TitleCard key={t.id} title={t} />
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
+    </>
   );
 }
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
-      <p className="text-sm text-zinc-500">{message}</p>
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-[#0e0e16]/40 px-6 py-10 text-center backdrop-blur-md">
+      <p className="text-sm text-zinc-400">{message}</p>
       <AddTitleButton label="Add a title" variant="ghost" />
     </div>
   );
