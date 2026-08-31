@@ -171,7 +171,7 @@ function EnterWorldOverlay() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/hero.png)",
+          backgroundImage: "url(/background.png)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           animation: "enter-world 900ms ease-in forwards",
