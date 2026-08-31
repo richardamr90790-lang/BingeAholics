@@ -19,9 +19,7 @@ export default async function AppLayout({
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar email={user.email ?? ""} />
-        <main className="mx-auto w-full max-w-6xl flex-1 p-4 sm:p-6">
-          {children}
-        </main>
+        <main className="w-full flex-1 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );
