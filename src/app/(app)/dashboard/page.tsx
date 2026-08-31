@@ -33,10 +33,6 @@ const CATEGORY_STYLE: Record<
   learn: { Icon: GradCapIcon, color: "text-amber-400" },
 };
 
-// Shared glass-panel surface so the wallpaper stays subtly visible through cards.
-const PANEL =
-  "rounded-2xl border border-white/10 bg-[#0e0e16]/55 shadow-xl backdrop-blur-md";
-
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -79,44 +75,56 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="space-y-8">
-        <div className="grid gap-4 lg:grid-cols-3">
-          {/* Hero */}
-          <section className={`${PANEL} lg:col-span-2 p-6 sm:p-8`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
-              Welcome back,
-            </p>
-            <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-white">
-              {displayName(user)}
-            </h1>
-            <p className="mt-2 text-sm text-zinc-300/80">
-              Track it all. Never lose your place again.
-            </p>
+        <div className="flex flex-col gap-4 lg:flex-row">
+          {/* Welcome + art banner */}
+          <section className="relative flex-1 overflow-hidden rounded-2xl border border-white/10">
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "url(/hero.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "center 38%",
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10] via-[#0a0a10]/75 to-[#0a0a10]/15" />
 
-            <div className="mt-6 flex flex-wrap items-start gap-6">
-              {CATEGORIES.map((c) => {
-                const { Icon, color } = CATEGORY_STYLE[c.key];
-                return (
-                  <Link
-                    key={c.key}
-                    href={`/library?category=${c.key}`}
-                    className="flex flex-col items-center gap-1.5 transition hover:-translate-y-0.5"
-                  >
-                    <Icon className={`size-6 ${color}`} />
-                    <span className={`text-xs font-medium ${color}`}>
-                      {c.label}
-                    </span>
-                  </Link>
-                );
-              })}
+            <div className="relative p-6 sm:p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
+                Welcome back,
+              </p>
+              <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-white">
+                {displayName(user)}
+              </h1>
+              <p className="mt-2 text-sm text-zinc-300/90">
+                Track it all. Never lose your place again.
+              </p>
 
-              <div className="ml-auto self-center">
-                <AddTitleButton label="Add a title" />
+              <div className="mt-6 flex flex-wrap items-start gap-6">
+                {CATEGORIES.map((c) => {
+                  const { Icon, color } = CATEGORY_STYLE[c.key];
+                  return (
+                    <Link
+                      key={c.key}
+                      href={`/library?category=${c.key}`}
+                      className="flex flex-col items-center gap-1.5 transition hover:-translate-y-0.5"
+                    >
+                      <Icon className={`size-6 ${color}`} />
+                      <span className={`text-xs font-medium ${color}`}>
+                        {c.label}
+                      </span>
+                    </Link>
+                  );
+                })}
+
+                <div className="ml-auto self-center">
+                  <AddTitleButton label="Add a title" />
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Your Stats */}
-          <aside className={`${PANEL} p-5`}>
+          {/* Your Stats — pinned to the right edge */}
+          <aside className="w-full shrink-0 rounded-2xl border border-white/10 bg-[#14141c] p-5 lg:w-72">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-white">Your Stats</h2>
               <span className="text-xs text-zinc-500">All time</span>
@@ -198,8 +206,8 @@ export default async function DashboardPage() {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-[#0e0e16]/40 px-6 py-10 text-center backdrop-blur-md">
-      <p className="text-sm text-zinc-400">{message}</p>
+    <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
+      <p className="text-sm text-zinc-500">{message}</p>
       <AddTitleButton label="Add a title" variant="ghost" />
     </div>
   );
