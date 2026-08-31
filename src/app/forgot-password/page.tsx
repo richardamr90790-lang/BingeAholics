@@ -1,18 +1,40 @@
 "use client";
 
-import { Suspense, useActionState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { requestPasswordReset, type AuthState } from "../actions";
+import { createClient } from "@/lib/supabase/client";
+
+type Status = "idle" | "sending" | "sent" | "error";
 
 function ForgotPasswordForm() {
   const searchParams = useSearchParams();
   const linkError = searchParams.get("error");
 
-  const [state, formAction, pending] = useActionState<AuthState, FormData>(
-    requestPasswordReset,
-    null,
-  );
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const email = String(new FormData(e.currentTarget).get("email") ?? "");
+    setStatus("sending");
+    setMessage("");
+
+    // Run on the client so @supabase/ssr stores the PKCE verifier in a cookie
+    // that the /auth/confirm route can read back.
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/confirm?next=/account/update-password`,
+    });
+
+    if (error) {
+      setStatus("error");
+      setMessage(error.message);
+    } else {
+      setStatus("sent");
+      setMessage("If that email has an account, a reset link is on its way.");
+    }
+  }
 
   return (
     <div className="w-full max-w-sm space-y-6">
@@ -29,7 +51,7 @@ function ForgotPasswordForm() {
         </p>
       )}
 
-      <form action={formAction} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <input
           name="email"
           type="email"
@@ -40,15 +62,22 @@ function ForgotPasswordForm() {
         />
         <button
           type="submit"
-          disabled={pending}
+          disabled={status === "sending"}
           className="w-full rounded-md bg-foreground px-3 py-2 text-sm font-medium text-background disabled:opacity-50"
         >
-          {pending ? "…" : "Send reset link"}
+          {status === "sending" ? "…" : "Send reset link"}
         </button>
       </form>
 
-      {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
-      {state?.notice && <p className="text-sm text-green-600">{state.notice}</p>}
+      {message && (
+        <p
+          className={`text-sm ${
+            status === "error" ? "text-red-500" : "text-green-600"
+          }`}
+        >
+          {message}
+        </p>
+      )}
 
       <p className="text-center text-sm">
         <Link
