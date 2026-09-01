@@ -78,13 +78,13 @@ export default async function DashboardPage() {
         {/* Full-bleed hero banner: breaks out of <main>'s padding so the
             artwork sits flush against the sidebar, the right edge and the
             topbar. Welcome on the left, stats on the right. */}
-        <section className="relative -mx-4 -mt-4 overflow-hidden border-b border-white/10 sm:-mx-6 sm:-mt-6">
+        <section className="relative -mx-4 -mt-4 min-h-[20rem] overflow-hidden border-b border-white/10 sm:-mx-6 sm:-mt-6 lg:min-h-[24rem]">
           <div
             className="absolute inset-0"
             style={{
               backgroundImage: "url(/hero.png)",
               backgroundSize: "cover",
-              backgroundPosition: "center 38%",
+              backgroundPosition: "center 45%",
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a10]/95 via-[#0a0a10]/25 to-[#0a0a10]/70" />
