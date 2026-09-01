@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { signOut } from "@/app/actions";
 import { ChevronDownIcon } from "./icons";
 import { Avatar } from "./avatar";
@@ -38,6 +39,13 @@ export function Topbar({
               <div className="truncate px-3 py-2 text-xs text-zinc-500">
                 {email}
               </div>
+              <Link
+                href="/settings"
+                onClick={() => setMenuOpen(false)}
+                className="block px-3 py-2 text-zinc-200 hover:bg-white/5"
+              >
+                Settings &amp; avatar
+              </Link>
               <form action={signOut}>
                 <button className="w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5">
                   Sign out
