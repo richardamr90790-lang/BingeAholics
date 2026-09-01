@@ -9,7 +9,7 @@ export function Topbar({ email }: { email: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-white/5 bg-[#0b0b12]/25 px-4 py-3 backdrop-blur-lg sm:px-6">
+    <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-white/5 bg-[#0b0b12]/15 px-4 py-3 backdrop-blur-md sm:px-6">
       <div className="relative hidden max-w-md flex-1 sm:block">
         <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-500">
           <SearchIcon className="size-4" />

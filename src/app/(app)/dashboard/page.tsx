@@ -85,8 +85,8 @@ export default async function DashboardPage() {
             backgroundPosition: "center",
           }}
         />
-        <div className="absolute inset-0 bg-[#0a0a10]/55" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a10]/20 to-[#0a0a10]/72" />
+        <div className="absolute inset-0 bg-[#0a0a10]/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a10]/15 to-[#0a0a10]/65" />
       </div>
 
       <div className="space-y-8">
