@@ -32,7 +32,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-[#0c0c12] lg:flex">
+    <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-[#0c0c12]/35 backdrop-blur-lg lg:flex">
       <div className="flex items-center gap-2 px-5 py-5">
         <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
           <svg viewBox="0 0 24 24" className="size-4 fill-white" aria-hidden>
