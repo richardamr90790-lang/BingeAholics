@@ -7,6 +7,7 @@ import {
   type TitleType,
 } from "@/lib/data/titles";
 import { listActivity } from "@/lib/data/activity";
+import { PageHeader } from "../_components/page-header";
 
 function Bar({ value, max }: { value: number; max: number }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
@@ -83,7 +84,12 @@ export default async function StatsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Binge Stats</h1>
+      <PageHeader
+        title="Binge Stats"
+        subtitle="Your binge data, laid out."
+        bgPos="100% 32%"
+      />
+
 
       {total === 0 ? (
         <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-14 text-center text-sm text-zinc-500">

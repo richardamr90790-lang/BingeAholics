@@ -13,6 +13,7 @@ import {
   type CalendarEvent,
 } from "@/lib/calendar";
 import { createEvent, deleteEvent } from "./actions";
+import { PageHeader } from "../_components/page-header";
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -102,17 +103,21 @@ export function CalendarView({
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Calendar</h1>
-        {!isCurrentMonth && (
-          <Link
-            href="/calendar"
-            className="text-sm text-violet-400 hover:text-violet-300"
-          >
-            Jump to today
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title="Calendar"
+        subtitle="Releases, plans and notes."
+        bgPos="100% 62%"
+        action={
+          !isCurrentMonth ? (
+            <Link
+              href="/calendar"
+              className="text-sm text-violet-400 hover:text-violet-300"
+            >
+              Jump to today
+            </Link>
+          ) : undefined
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
         {/* Month grid */}

@@ -8,6 +8,7 @@ import {
 } from "@/lib/data/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import { PageHeader } from "../_components/page-header";
 import { SearchBox } from "./_search-box";
 
 // AI cover generation (a Server Action reached from the title cards / add
@@ -55,10 +56,16 @@ export default async function LibraryPage({
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">{heading}</h1>
-        <AddTitleButton />
-      </div>
+      <PageHeader
+        title={heading}
+        subtitle={
+          activeStatus === "in_progress"
+            ? "Whatever you're currently into — jump back in."
+            : "Everything you're tracking, all in one place."
+        }
+        bgPos={activeStatus === "in_progress" ? "100% 18%" : "100% 88%"}
+        action={<AddTitleButton />}
+      />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">

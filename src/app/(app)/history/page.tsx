@@ -5,6 +5,7 @@ import {
   timeAgo,
   type Activity,
 } from "@/lib/data/activity";
+import { PageHeader } from "../_components/page-header";
 
 function dayLabel(iso: string) {
   return new Date(iso).toLocaleDateString(undefined, {
@@ -27,7 +28,12 @@ export default async function HistoryPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">History</h1>
+      <PageHeader
+        title="History"
+        subtitle="Everything you've logged."
+        bgPos="0% 45%"
+      />
+
 
       {items.length === 0 ? (
         <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-14 text-center text-sm text-zinc-500">
