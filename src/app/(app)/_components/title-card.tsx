@@ -10,11 +10,13 @@ import {
   type Title,
 } from "@/lib/titles";
 import { CheckIcon, PlusIcon, TrashIcon } from "./icons";
+import { EditTitleDialog } from "./edit-title-dialog";
 
 export function TitleCard({ title: t }: { title: Title }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
   const pct = progressPercent(t);
 
   function run(fn: () => Promise<{ error?: string } | undefined>) {
@@ -66,6 +68,15 @@ export function TitleCard({ title: t }: { title: Title }) {
                 onClick={() => setMenuOpen(false)}
               />
               <div className="absolute right-0 z-20 mt-1 w-40 overflow-hidden rounded-lg border border-white/10 bg-[#1b1b24] py-1 text-xs shadow-xl">
+                <button
+                  onClick={() => {
+                    setEditing(true);
+                    setMenuOpen(false);
+                  }}
+                  className="block w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5"
+                >
+                  Edit
+                </button>
                 {t.status !== "completed" && (
                   <button
                     onClick={() => run(() => setStatus(t.id, "completed"))}
@@ -139,6 +150,13 @@ export function TitleCard({ title: t }: { title: Title }) {
           </div>
         </div>
       </div>
+
+      <EditTitleDialog
+        key={editing ? "open" : "closed"}
+        title={t}
+        open={editing}
+        onClose={() => setEditing(false)}
+      />
     </div>
   );
 }

@@ -201,6 +201,55 @@ export async function deleteTitle(id: string): Promise<ActionResult> {
   revalidateApp();
 }
 
+export async function updateTitle(
+  id: string,
+  formData: FormData,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return { error: "Title is required" };
+
+  const type = String(formData.get("type") ?? "other");
+  const unit_label =
+    String(formData.get("unit_label") ?? "Part").trim() || "Part";
+
+  const totalRaw = String(formData.get("total_units") ?? "").trim();
+  const total_units = totalRaw ? Math.max(0, parseInt(totalRaw, 10) || 0) : null;
+
+  const currentRaw = String(formData.get("current_unit") ?? "").trim();
+  const current_unit = currentRaw
+    ? Math.max(0, parseInt(currentRaw, 10) || 0)
+    : 0;
+
+  const cover_url = String(formData.get("cover_url") ?? "").trim() || null;
+  const status = String(formData.get("status") ?? "planned") as Title["status"];
+  const notes = String(formData.get("notes") ?? "").trim() || null;
+
+  const ratingRaw = String(formData.get("rating") ?? "").trim();
+  const rating = ratingRaw
+    ? Math.min(10, Math.max(1, parseInt(ratingRaw, 10) || 1))
+    : null;
+
+  const patch: Record<string, unknown> = {
+    title,
+    type,
+    unit_label,
+    total_units,
+    current_unit,
+    cover_url,
+    status,
+    rating,
+    notes,
+    completed_at: status === "completed" ? new Date().toISOString() : null,
+  };
+
+  const { error } = await supabase.from("titles").update(patch).eq("id", id);
+  if (error) return { error: error.message };
+
+  revalidateApp();
+}
+
 export async function updateDisplayName(name: string): Promise<ActionResult> {
   const supabase = await createClient();
   const clean = name.trim().slice(0, 40);
