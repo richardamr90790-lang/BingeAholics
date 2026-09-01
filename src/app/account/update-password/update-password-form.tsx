@@ -13,7 +13,7 @@ export function UpdatePasswordForm() {
   return (
     <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-950/70 p-8 shadow-2xl backdrop-blur-xl">
       <div className="space-y-1 text-center">
-        <h1 className="text-2xl font-extrabold uppercase italic tracking-tight text-white">
+        <h1 className="text-2xl uppercase text-white">
           Set a new password
         </h1>
       </div>

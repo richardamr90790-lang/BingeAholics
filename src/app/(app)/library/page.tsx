@@ -29,11 +29,14 @@ export default async function LibraryPage({
     ...(activeStatus ? { status: activeStatus } : {}),
   });
 
-  const heading = activeStatus
-    ? STATUS_LABELS[activeStatus]
-    : activeCategory
-      ? CATEGORIES.find((c) => c.key === activeCategory)!.label
-      : "My Stuff";
+  const heading =
+    activeStatus === "in_progress"
+      ? "One More....."
+      : activeStatus
+        ? STATUS_LABELS[activeStatus]
+        : activeCategory
+          ? CATEGORIES.find((c) => c.key === activeCategory)!.label
+          : "My Binge Vault";
 
   return (
     <div className="space-y-5">

@@ -16,10 +16,10 @@ const NAV = [
   { href: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
   {
     href: "/library?status=in_progress",
-    label: "In Progress",
+    label: "One More.....",
     Icon: PlayCircleIcon,
   },
-  { href: "/library", label: "My Stuff", Icon: LibraryIcon },
+  { href: "/library", label: "My Binge Vault", Icon: LibraryIcon },
   { href: "/stats", label: "Binge Stats", Icon: StatsIcon },
   { href: "/history", label: "History", Icon: HistoryIcon },
   { href: "/calendar", label: "Calendar", Icon: CalendarIcon },
@@ -48,9 +48,7 @@ export function Sidebar() {
             <path d="M8 5.5c0-1.1 1.2-1.8 2.1-1.2l9 6c.9.6.9 1.9 0 2.4l-9 6c-1 .6-2.1-.1-2.1-1.2v-12Z" />
           </svg>
         </span>
-        <span className="text-lg font-extrabold tracking-tight text-white">
-          Bingeaholics
-        </span>
+        <span className="font-display text-xl text-white">Bingeaholics</span>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-2">

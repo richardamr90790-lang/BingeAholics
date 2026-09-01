@@ -14,6 +14,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-marker);
 }
 
 html {
@@ -23,6 +24,17 @@ html {
 body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Street-art display face for headings + the wordmark. */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-marker), var(--font-geist-sans), sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.005em;
 }
 
 /* Login screen backdrop. The gradient over it keeps the form readable. */

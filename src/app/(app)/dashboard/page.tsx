@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { displayName } from "@/lib/user";
 import {
   CATEGORIES,
+  categoryTypes,
   formatMinutes,
   getContinueWatching,
   getStats,
@@ -40,11 +41,20 @@ const CATEGORY_STYLE: Record<
   learn: { Icon: GradCapIcon, color: "text-amber-400" },
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { cat } = await searchParams;
+  const activeCat: Category =
+    CATEGORIES.find((c) => c.key === cat)?.key ?? "watch";
+  const vaultTypes = categoryTypes(activeCat) ?? [];
 
   const now = new Date();
   const [continueWatching, stats, library, calendarEvents, recentActivity] =
@@ -55,6 +65,8 @@ export default async function DashboardPage() {
       listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
       listActivity(5),
     ]);
+
+  const vaultTitles = library.filter((t) => vaultTypes.includes(t.type));
 
   const statRows = [
     {
@@ -126,21 +138,25 @@ export default async function DashboardPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-violet-300">
                 Welcome back,
               </p>
-              <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-white">
+              <h1 className="mt-1 text-4xl text-white">
                 {displayName(user)}
               </h1>
               <p className="mt-2 text-sm text-zinc-300/90">
                 Track it all. Never lose your place again.
               </p>
 
-              <div className="mt-6 flex flex-wrap items-start gap-6">
+              <div className="mt-6 flex flex-wrap items-start gap-3">
                 {CATEGORIES.map((c) => {
                   const { Icon, color } = CATEGORY_STYLE[c.key];
+                  const active = activeCat === c.key;
                   return (
                     <Link
                       key={c.key}
-                      href={`/library?category=${c.key}`}
-                      className="flex flex-col items-center gap-1.5 transition hover:-translate-y-0.5"
+                      href={`/dashboard?cat=${c.key}`}
+                      scroll={false}
+                      className={`flex flex-col items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+                        active ? "bg-white/10" : "opacity-70 hover:opacity-100"
+                      }`}
                     >
                       <Icon className={`size-6 ${color}`} />
                       <span className={`text-xs font-medium ${color}`}>
@@ -183,7 +199,7 @@ export default async function DashboardPage() {
           <div className="min-w-0 space-y-8">
             <section>
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">In Progress</h2>
+                <h2 className="text-xl text-white">One More.....</h2>
                 <Link
                   href="/library?status=in_progress"
                   className="text-sm text-violet-400 hover:text-violet-300"
@@ -208,7 +224,7 @@ export default async function DashboardPage() {
               )}
             </section>
 
-            <MyStuff titles={library} />
+            <MyStuff titles={vaultTitles} activeCat={activeCat} />
           </div>
 
           <aside className="space-y-4">
