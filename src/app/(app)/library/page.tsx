@@ -3,38 +3,37 @@ import {
   CATEGORIES,
   categoryTypes,
   listTitles,
-  TYPE_LABELS,
-  type TitleType,
+  STATUS_LABELS,
+  type TitleStatus,
 } from "@/lib/data/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
 
-const TYPES = Object.keys(TYPE_LABELS) as TitleType[];
+const STATUSES = Object.keys(STATUS_LABELS) as TitleStatus[];
 
 export default async function LibraryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; category?: string }>;
+  searchParams: Promise<{ category?: string; status?: string }>;
 }) {
-  const { type, category } = await searchParams;
+  const { category, status } = await searchParams;
 
-  const activeType = TYPES.includes(type as TitleType)
-    ? (type as TitleType)
-    : undefined;
   const activeCategory = CATEGORIES.find((c) => c.key === category)?.key;
   const catTypes = activeCategory ? categoryTypes(activeCategory) : null;
+  const activeStatus = STATUSES.includes(status as TitleStatus)
+    ? (status as TitleStatus)
+    : undefined;
 
-  const titles = await listTitles(
-    activeType
-      ? { type: activeType }
-      : catTypes
-        ? { types: catTypes }
-        : undefined,
-  );
+  const titles = await listTitles({
+    ...(catTypes ? { types: catTypes } : {}),
+    ...(activeStatus ? { status: activeStatus } : {}),
+  });
 
-  const heading = activeCategory
-    ? CATEGORIES.find((c) => c.key === activeCategory)!.label
-    : "My Library";
+  const heading = activeStatus
+    ? STATUS_LABELS[activeStatus]
+    : activeCategory
+      ? CATEGORIES.find((c) => c.key === activeCategory)!.label
+      : "My Stuff";
 
   return (
     <div className="space-y-5">
@@ -44,20 +43,24 @@ export default async function LibraryPage({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Tab href="/library" label="All" active={!activeType && !activeCategory} />
-        {TYPES.map((t) => (
+        <Tab
+          href="/library"
+          label="All"
+          active={!activeCategory && !activeStatus}
+        />
+        {CATEGORIES.map((c) => (
           <Tab
-            key={t}
-            href={`/library?type=${t}`}
-            label={TYPE_LABELS[t]}
-            active={activeType === t}
+            key={c.key}
+            href={`/library?category=${c.key}`}
+            label={c.label}
+            active={activeCategory === c.key}
           />
         ))}
       </div>
 
-      {activeCategory && (
+      {activeStatus && (
         <p className="text-sm text-zinc-500">
-          Showing {heading.toLowerCase()} titles.{" "}
+          Showing {heading.toLowerCase()}.{" "}
           <Link href="/library" className="text-violet-400 hover:text-violet-300">
             Clear
           </Link>
@@ -67,8 +70,8 @@ export default async function LibraryPage({
       {titles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-14 text-center">
           <p className="text-sm text-zinc-500">
-            {activeType
-              ? `No ${TYPE_LABELS[activeType].toLowerCase()} titles yet.`
+            {activeStatus
+              ? `Nothing ${heading.toLowerCase()}.`
               : activeCategory
                 ? `Nothing to ${activeCategory} yet.`
                 : "Nothing here yet."}

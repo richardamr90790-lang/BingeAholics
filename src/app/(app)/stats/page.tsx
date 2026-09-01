@@ -80,7 +80,7 @@ export default async function StatsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Stats</h1>
+      <h1 className="text-2xl font-bold text-white">Binge Stats</h1>
 
       {total === 0 ? (
         <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-14 text-center text-sm text-zinc-500">

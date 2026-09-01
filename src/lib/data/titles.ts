@@ -13,6 +13,7 @@ export {
 export async function listTitles(opts?: {
   type?: TitleType;
   types?: TitleType[];
+  status?: TitleStatus;
 }): Promise<Title[]> {
   const supabase = await createClient();
   let query = supabase
@@ -22,6 +23,7 @@ export async function listTitles(opts?: {
   if (opts?.type) query = query.eq("type", opts.type);
   else if (opts?.types && opts.types.length > 0)
     query = query.in("type", opts.types);
+  if (opts?.status) query = query.eq("status", opts.status);
   const { data, error } = await query;
   if (error) throw error;
   return (data ?? []) as Title[];

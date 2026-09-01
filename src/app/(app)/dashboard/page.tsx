@@ -14,6 +14,7 @@ import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
 import { RecentActivity } from "./_recent-activity";
+import { MyStuff } from "./_my-stuff";
 import {
   TvIcon,
   BookIcon,
@@ -50,7 +51,7 @@ export default async function DashboardPage() {
       getStats(),
       listTitles(),
       listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
-      listActivity(6),
+      listActivity(5),
     ]);
 
   const statRows = [
@@ -145,7 +146,7 @@ export default async function DashboardPage() {
 
             <div className="w-full border-t border-white/10 bg-[#0a0a10]/55 p-5 backdrop-blur-sm lg:w-80 lg:border-l lg:border-t-0">
               <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-white">Your Stats</h2>
+                <h2 className="font-semibold text-white">Binge Stats</h2>
                 <span className="text-xs text-zinc-400">All time</span>
               </div>
               <ul className="mt-2 divide-y divide-white/10">
@@ -174,11 +175,9 @@ export default async function DashboardPage() {
           <div className="min-w-0 space-y-8">
             <section>
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">
-                  Continue Watching
-                </h2>
+                <h2 className="text-lg font-semibold text-white">In Progress</h2>
                 <Link
-                  href="/library"
+                  href="/library?status=in_progress"
                   className="text-sm text-violet-400 hover:text-violet-300"
                 >
                   View all
@@ -201,26 +200,7 @@ export default async function DashboardPage() {
               )}
             </section>
 
-            <section>
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">My Library</h2>
-                <Link
-                  href="/library"
-                  className="text-sm text-violet-400 hover:text-violet-300"
-                >
-                  View all
-                </Link>
-              </div>
-              {library.length === 0 ? (
-                <EmptyState message="Your library is empty." />
-              ) : (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                  {library.slice(0, 12).map((t) => (
-                    <TitleCard key={t.id} title={t} />
-                  ))}
-                </div>
-              )}
-            </section>
+            <MyStuff titles={library} />
           </div>
 
           <aside className="space-y-4">

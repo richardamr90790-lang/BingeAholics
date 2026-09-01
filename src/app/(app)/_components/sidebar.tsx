@@ -1,14 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   DashboardIcon,
   PlayCircleIcon,
   LibraryIcon,
-  CompassIcon,
-  BookmarkIcon,
-  CollectionsIcon,
   HistoryIcon,
   StatsIcon,
   CalendarIcon,
@@ -17,19 +14,31 @@ import {
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
-  { href: "/continue", label: "Continue Watching", Icon: PlayCircleIcon },
-  { href: "/library", label: "My Library", Icon: LibraryIcon },
-  { href: "/discover", label: "Discover", Icon: CompassIcon },
-  { href: "/watchlist", label: "Watchlist", Icon: BookmarkIcon },
-  { href: "/collections", label: "Collections", Icon: CollectionsIcon },
+  {
+    href: "/library?status=in_progress",
+    label: "In Progress",
+    Icon: PlayCircleIcon,
+  },
+  { href: "/library", label: "My Stuff", Icon: LibraryIcon },
+  { href: "/stats", label: "Binge Stats", Icon: StatsIcon },
   { href: "/history", label: "History", Icon: HistoryIcon },
-  { href: "/stats", label: "Stats", Icon: StatsIcon },
   { href: "/calendar", label: "Calendar", Icon: CalendarIcon },
   { href: "/settings", label: "Settings", Icon: SettingsIcon },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const inProgress = searchParams.get("status") === "in_progress";
+
+  function isActive(href: string) {
+    const [path, query] = href.split("?");
+    if (path === "/library") {
+      if (pathname !== "/library") return false;
+      return query ? inProgress : !inProgress;
+    }
+    return pathname === path || pathname.startsWith(path + "/");
+  }
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-[#0c0c12]/20 backdrop-blur-md lg:flex">
@@ -46,8 +55,7 @@ export function Sidebar() {
 
       <nav className="flex-1 space-y-1 px-3 py-2">
         {NAV.map(({ href, label, Icon }) => {
-          const active =
-            pathname === href || pathname.startsWith(href + "/");
+          const active = isActive(href);
           return (
             <Link
               key={href}
@@ -64,15 +72,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <div className="m-3 rounded-xl border border-violet-500/20 bg-violet-500/10 p-4">
-        <p className="flex items-center gap-2 text-sm font-semibold text-violet-300">
-          <span aria-hidden>🔥</span> Binge Mode
-        </p>
-        <p className="mt-1 text-xs text-zinc-400">
-          Hyper-focus mode is coming soon.
-        </p>
-      </div>
     </aside>
   );
 }
