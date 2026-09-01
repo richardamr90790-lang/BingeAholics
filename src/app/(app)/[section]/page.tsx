@@ -6,7 +6,6 @@ const SECTIONS: Record<string, string> = {
   discover: "Discover",
   watchlist: "Watchlist",
   collections: "Collections",
-  history: "History",
   stats: "Stats",
 };
 

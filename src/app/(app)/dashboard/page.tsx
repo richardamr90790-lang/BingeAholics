@@ -9,9 +9,11 @@ import {
   type Category,
 } from "@/lib/data/titles";
 import { listEventsForMonth } from "@/lib/data/calendar";
+import { listActivity } from "@/lib/data/activity";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
+import { RecentActivity } from "./_recent-activity";
 import {
   TvIcon,
   BookIcon,
@@ -42,12 +44,14 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   const now = new Date();
-  const [continueWatching, stats, library, calendarEvents] = await Promise.all([
-    getContinueWatching(),
-    getStats(),
-    listTitles(),
-    listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
-  ]);
+  const [continueWatching, stats, library, calendarEvents, recentActivity] =
+    await Promise.all([
+      getContinueWatching(),
+      getStats(),
+      listTitles(),
+      listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
+      listActivity(6),
+    ]);
 
   const statRows = [
     {
@@ -219,12 +223,13 @@ export default async function DashboardPage() {
             </section>
           </div>
 
-          <aside>
+          <aside className="space-y-4">
             <MiniCalendar
               initialYear={now.getFullYear()}
               initialMonth={now.getMonth() + 1}
               initialEvents={calendarEvents}
             />
+            <RecentActivity items={recentActivity} />
           </aside>
         </div>
       </div>

@@ -1,14 +1,40 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
-import type { Title } from "@/lib/titles";
+import { STATUS_LABELS, TYPE_LABELS, type Title } from "@/lib/titles";
+import type { ActivityKind } from "@/lib/activity";
 
 export type ActionResult = { error?: string } | undefined;
 
 function revalidateApp() {
   revalidatePath("/dashboard");
   revalidatePath("/library");
+  revalidatePath("/history");
+}
+
+async function logActivity(
+  supabase: SupabaseClient,
+  userId: string,
+  entry: {
+    title_id: string | null;
+    title_name: string;
+    kind: ActivityKind;
+    detail?: string | null;
+  },
+) {
+  try {
+    await supabase.from("activity").insert({
+      user_id: userId,
+      title_id: entry.title_id,
+      title_name: entry.title_name,
+      kind: entry.kind,
+      detail: entry.detail ?? null,
+    });
+  } catch {
+    // activity logging is best-effort; never block the main action
+  }
 }
 
 export async function createTitle(formData: FormData): Promise<ActionResult> {
@@ -41,19 +67,30 @@ export async function createTitle(formData: FormData): Promise<ActionResult> {
     status = "completed";
 
   const nowIso = new Date().toISOString();
-  const { error } = await supabase.from("titles").insert({
-    user_id: user.id,
-    title,
-    type,
-    unit_label,
-    total_units,
-    current_unit,
-    status,
-    cover_url,
-    started_at: current_unit > 0 ? nowIso : null,
-    completed_at: status === "completed" ? nowIso : null,
-  });
+  const { data: inserted, error } = await supabase
+    .from("titles")
+    .insert({
+      user_id: user.id,
+      title,
+      type,
+      unit_label,
+      total_units,
+      current_unit,
+      status,
+      cover_url,
+      started_at: current_unit > 0 ? nowIso : null,
+      completed_at: status === "completed" ? nowIso : null,
+    })
+    .select("id")
+    .single();
   if (error) return { error: error.message };
+
+  await logActivity(supabase, user.id, {
+    title_id: inserted?.id ?? null,
+    title_name: title,
+    kind: "added",
+    detail: TYPE_LABELS[type as Title["type"]] ?? null,
+  });
 
   revalidateApp();
 }
@@ -90,6 +127,21 @@ export async function updateProgress(
   const { error } = await supabase.from("titles").update(patch).eq("id", id);
   if (error) return { error: error.message };
 
+  if (patch.status === "completed" && row.status !== "completed") {
+    await logActivity(supabase, row.user_id, {
+      title_id: id,
+      title_name: row.title,
+      kind: "completed",
+    });
+  } else if (current !== row.current_unit) {
+    await logActivity(supabase, row.user_id, {
+      title_id: id,
+      title_name: row.title,
+      kind: "progress",
+      detail: `${row.unit_label} ${row.current_unit} → ${current}`,
+    });
+  }
+
   revalidateApp();
 }
 
@@ -98,6 +150,12 @@ export async function setStatus(
   status: Title["status"],
 ): Promise<ActionResult> {
   const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("titles")
+    .select("title, status, user_id")
+    .eq("id", id)
+    .single();
+
   const patch: Record<string, unknown> = { status };
   if (status === "completed") patch.completed_at = new Date().toISOString();
   if (status === "in_progress") patch.completed_at = null;
@@ -105,13 +163,40 @@ export async function setStatus(
   const { error } = await supabase.from("titles").update(patch).eq("id", id);
   if (error) return { error: error.message };
 
+  if (row && row.status !== status) {
+    await logActivity(supabase, row.user_id, {
+      title_id: id,
+      title_name: row.title,
+      kind: status === "completed" ? "completed" : "status",
+      detail:
+        status === "completed"
+          ? null
+          : `${STATUS_LABELS[row.status as Title["status"]]} → ${STATUS_LABELS[status]}`,
+    });
+  }
+
   revalidateApp();
 }
 
 export async function deleteTitle(id: string): Promise<ActionResult> {
   const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("titles")
+    .select("title, type, user_id")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase.from("titles").delete().eq("id", id);
   if (error) return { error: error.message };
+
+  if (row) {
+    await logActivity(supabase, row.user_id, {
+      title_id: null,
+      title_name: row.title,
+      kind: "removed",
+      detail: TYPE_LABELS[row.type as Title["type"]] ?? null,
+    });
+  }
 
   revalidateApp();
 }
