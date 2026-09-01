@@ -5,6 +5,7 @@ import { Sidebar } from "./_components/sidebar";
 import { Topbar } from "./_components/topbar";
 import { ToastProvider } from "./_components/toast";
 import { Onboarding } from "./_components/onboarding";
+import { PageAmbience } from "./_components/page-ambience";
 
 export default async function AppLayout({
   children,
@@ -20,6 +21,7 @@ export default async function AppLayout({
   return (
     <ToastProvider>
       <div className="relative z-0 flex min-h-screen bg-[#0b0b12] text-zinc-100">
+        <PageAmbience />
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
           <Topbar email={user.email ?? ""} avatarId={avatarIdOf(user)} />

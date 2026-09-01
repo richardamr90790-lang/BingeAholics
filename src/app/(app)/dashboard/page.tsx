@@ -139,21 +139,6 @@ export default async function DashboardPage({
 
   return (
     <>
-      {/* Ambient space backdrop behind the whole dashboard (fixed to the
-          viewport, sits over the layout's flat dark but behind all content). */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "url(/space-bg.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-        <div className="absolute inset-0 bg-[#0a0a10]/45" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a10]/15 to-[#0a0a10]/65" />
-      </div>
-
       <div
         className="accent-scope space-y-8"
         style={{ "--accent": CATEGORY_ACCENT[activeCat] } as React.CSSProperties}
