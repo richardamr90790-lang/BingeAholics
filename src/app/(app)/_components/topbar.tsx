@@ -3,8 +3,17 @@
 import { useState } from "react";
 import { signOut } from "@/app/actions";
 import { ChevronDownIcon } from "./icons";
+import { Avatar } from "./avatar";
 
-export function Topbar({ email }: { email: string }) {
+export function Topbar({
+  email,
+  avatarStyle,
+  avatarSeed,
+}: {
+  email: string;
+  avatarStyle: string;
+  avatarSeed: string;
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -14,9 +23,12 @@ export function Topbar({ email }: { email: string }) {
           onClick={() => setMenuOpen((v) => !v)}
           className="flex items-center gap-2 rounded-lg border border-white/10 py-1.5 pl-1.5 pr-2 text-sm text-zinc-200 hover:bg-white/5"
         >
-          <span className="grid size-6 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-xs font-bold text-white">
-            {email.charAt(0).toUpperCase()}
-          </span>
+          <Avatar
+            style={avatarStyle}
+            seed={avatarSeed}
+            fallback={email}
+            size={24}
+          />
           <span className="hidden max-w-[12ch] truncate sm:inline">{email}</span>
           <ChevronDownIcon className="size-4 text-zinc-500" />
         </button>
