@@ -112,6 +112,7 @@ export async function createTitle(formData: FormData): Promise<ActionResult> {
 export async function updateProgress(
   id: string,
   nextUnit: number,
+  newLink?: string,
 ): Promise<ActionResult> {
   const supabase = await createClient();
   const { data: row, error: fetchError } = await supabase
@@ -124,6 +125,8 @@ export async function updateProgress(
   const current = Math.max(0, Math.floor(nextUnit));
   const nowIso = new Date().toISOString();
   const patch: Record<string, unknown> = { current_unit: current };
+
+  if (newLink != null && newLink.trim()) patch.link_url = newLink.trim();
 
   if (current > 0 && !row.started_at) patch.started_at = nowIso;
 

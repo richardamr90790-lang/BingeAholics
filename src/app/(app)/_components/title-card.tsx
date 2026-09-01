@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { deleteTitle, setStatus, updateProgress } from "../actions";
+import { deleteTitle, setStatus } from "../actions";
 import {
   progressPercent,
   STATUS_LABELS,
@@ -23,6 +23,7 @@ import {
   TvIcon,
 } from "./icons";
 import { EditTitleDialog } from "./edit-title-dialog";
+import { AdvanceDialog } from "./advance-dialog";
 
 const PLACEHOLDER_ICON: Record<TitleType, typeof BookIcon> = {
   anime: TvIcon,
@@ -65,6 +66,7 @@ export function TitleCard({ title: t }: { title: Title }) {
   const [pending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [advancing, setAdvancing] = useState(false);
   const pct = progressPercent(t);
 
   function run(fn: () => Promise<{ error?: string } | undefined>) {
@@ -212,9 +214,7 @@ export function TitleCard({ title: t }: { title: Title }) {
             </span>
             {t.status !== "completed" && (
               <button
-                onClick={() =>
-                  run(() => updateProgress(t.id, t.current_unit + 1))
-                }
+                onClick={() => setAdvancing(true)}
                 disabled={pending || atEnd}
                 className="acc-bg-soft acc-text flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125 disabled:opacity-40"
               >
@@ -242,6 +242,13 @@ export function TitleCard({ title: t }: { title: Title }) {
         title={t}
         open={editing}
         onClose={() => setEditing(false)}
+      />
+
+      <AdvanceDialog
+        key={advancing ? "adv-open" : "adv-closed"}
+        title={t}
+        open={advancing}
+        onClose={() => setAdvancing(false)}
       />
     </div>
   );
