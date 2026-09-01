@@ -23,3 +23,9 @@ export function avatarIdOf(user: MinimalUser): number | null {
   const v = meta.avatar_id;
   return typeof v === "number" && v >= 1 && v <= 50 ? Math.floor(v) : null;
 }
+
+/** Has the user finished (or skipped) the welcome tour? */
+export function hasOnboarded(user: MinimalUser): boolean {
+  const meta = (user?.user_metadata ?? {}) as { onboarded_at?: unknown };
+  return typeof meta.onboarded_at === "string" && meta.onboarded_at.length > 0;
+}

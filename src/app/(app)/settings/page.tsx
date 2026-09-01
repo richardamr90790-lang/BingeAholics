@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { avatarIdOf, storedDisplayName } from "@/lib/user";
 import { SettingsForm } from "../_components/settings-form";
 import { AvatarPicker } from "./_avatar-picker";
+import { ReplayTutorialButton } from "./_replay-tutorial";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -17,6 +18,7 @@ export default async function SettingsPage() {
         email={user?.email ?? ""}
       />
       <AvatarPicker initialId={avatarIdOf(user)} />
+      <ReplayTutorialButton />
     </div>
   );
 }

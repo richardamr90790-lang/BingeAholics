@@ -427,6 +427,24 @@ export async function updateDisplayName(name: string): Promise<ActionResult> {
   revalidatePath("/", "layout");
 }
 
+export async function completeOnboarding(): Promise<ActionResult> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    data: { onboarded_at: new Date().toISOString() },
+  });
+  if (error) return { error: error.message };
+  revalidatePath("/", "layout");
+}
+
+export async function replayOnboarding(): Promise<ActionResult> {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({
+    data: { onboarded_at: null },
+  });
+  if (error) return { error: error.message };
+  revalidatePath("/", "layout");
+}
+
 export async function updateAvatar(id: number): Promise<ActionResult> {
   if (!isAvatarId(id)) return { error: "Invalid avatar" };
   const supabase = await createClient();
