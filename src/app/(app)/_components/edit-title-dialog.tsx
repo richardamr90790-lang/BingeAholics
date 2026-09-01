@@ -10,6 +10,7 @@ import {
   type Title,
   type TitleStatus,
 } from "@/lib/titles";
+import { CoverInput } from "./cover-input";
 
 const inputClass =
   "w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 outline-none transition focus:border-violet-500/70 focus:ring-1 focus:ring-violet-500/40";
@@ -177,18 +178,7 @@ export function EditTitleDialog({
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium text-zinc-400">
-              Cover image URL <span className="text-zinc-600">(optional)</span>
-            </label>
-            <input
-              name="cover_url"
-              type="url"
-              defaultValue={t.cover_url ?? ""}
-              placeholder="https://…"
-              className={inputClass}
-            />
-          </div>
+          <CoverInput initialUrl={t.cover_url ?? ""} />
 
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">

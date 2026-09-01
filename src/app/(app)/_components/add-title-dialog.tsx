@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createTitle } from "../actions";
 import { TYPE_LABELS, type TitleType } from "@/lib/titles";
+import { CoverInput } from "./cover-input";
 
 const TYPE_DEFAULT_UNIT: Record<TitleType, string> = {
   anime: "Episode",
@@ -147,17 +148,7 @@ export function AddTitleDialog({
             </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium text-zinc-400">
-              Cover image URL <span className="text-zinc-600">(optional)</span>
-            </label>
-            <input
-              name="cover_url"
-              type="url"
-              placeholder="https://…"
-              className={inputClass}
-            />
-          </div>
+          <CoverInput />
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
