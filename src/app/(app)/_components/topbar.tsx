@@ -9,6 +9,7 @@ import { ChevronDownIcon } from "./icons";
 import { Avatar } from "./avatar";
 import { MobileNav } from "./mobile-nav";
 import { useToast } from "./toast";
+import { FeedbackDialog } from "./feedback-dialog";
 
 export function Topbar({
   email,
@@ -20,6 +21,7 @@ export function Topbar({
   avatarUrl: string | null;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const router = useRouter();
   const toast = useToast();
   const [replaying, startReplay] = useTransition();
@@ -76,6 +78,15 @@ export function Topbar({
               >
                 {replaying ? "Starting…" : "Replay tutorial"}
               </button>
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  setFeedbackOpen(true);
+                }}
+                className="block w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5"
+              >
+                Send feedback
+              </button>
               <form action={signOut}>
                 <button className="w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5">
                   Sign out
@@ -85,6 +96,12 @@ export function Topbar({
           </>
         )}
       </div>
+
+      <FeedbackDialog
+        key={feedbackOpen ? "fb-open" : "fb-closed"}
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
     </header>
   );
 }

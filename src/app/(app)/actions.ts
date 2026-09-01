@@ -445,6 +445,34 @@ export async function replayOnboarding(): Promise<ActionResult> {
   revalidatePath("/", "layout");
 }
 
+export async function submitSuggestion(
+  formData: FormData,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not signed in" };
+
+  // honeypot — bots fill hidden fields; drop silently so they think it worked
+  if (String(formData.get("website") ?? "").trim()) return;
+
+  const body = String(formData.get("body") ?? "").trim();
+  if (!body) return { error: "Write something first." };
+  if (body.length > 2000) return { error: "Keep it under 2000 characters." };
+
+  const kindRaw = String(formData.get("kind") ?? "idea");
+  const kind = ["bug", "idea", "other"].includes(kindRaw) ? kindRaw : "idea";
+
+  const { error } = await supabase.from("suggestions").insert({
+    user_id: user.id,
+    email: user.email ?? null,
+    kind,
+    body,
+  });
+  if (error) return { error: error.message };
+}
+
 export async function updateAvatar(id: number): Promise<ActionResult> {
   if (!isAvatarId(id)) return { error: "Invalid avatar" };
   const supabase = await createClient();
