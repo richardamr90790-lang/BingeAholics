@@ -281,22 +281,22 @@ export async function updateTitle(
 }
 
 const COVER_STYLE =
-  "cinematic Korean manhwa / webtoon cover art, semi-realistic digital painting, " +
-  "dramatic moody lighting, atmospheric, mature art style, muted cinematic colour grade, " +
-  "portrait composition, highly detailed, sharp focus, no text, no watermark, no signature, " +
-  "not chibi, not childish";
+  "anime and Korean manhwa illustration style, clean crisp line art, cel shading, " +
+  "flat vibrant colours, polished digital anime artwork, expressive character art, " +
+  "dynamic webtoon cover composition, mature anime style, portrait composition, detailed, " +
+  "no text, no watermark, no signature, not chibi, not photorealistic, not 3d render";
 
 function coverPrompt(title: string, type: string): string {
   const kind =
     type === "manhwa" || type === "manga"
-      ? "webtoon key art"
+      ? "manhwa / webtoon cover illustration"
       : type === "anime"
         ? "anime key visual"
         : type === "game"
-          ? "video game key art"
+          ? "anime game key art"
           : type === "book"
-            ? "book cover illustration"
-            : "dramatic poster art";
+            ? "anime cover illustration"
+            : "anime poster illustration";
   return `${title} — ${kind}, ${COVER_STYLE}`;
 }
 
