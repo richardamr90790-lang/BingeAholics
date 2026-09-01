@@ -8,6 +8,7 @@ export {
   CATEGORIES,
   categoryTypes,
   progressPercent,
+  formatMinutes,
 } from "@/lib/titles";
 
 export async function listTitles(opts?: {
@@ -46,17 +47,24 @@ export type Stats = {
   inProgress: number;
   completed: number;
   planned: number;
+  totalMinutes: number;
 };
 
 export async function getStats(): Promise<Stats> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from("titles").select("status");
+  const { data, error } = await supabase
+    .from("titles")
+    .select("status, minutes");
   if (error) throw error;
-  const rows = (data ?? []) as { status: TitleStatus }[];
+  const rows = (data ?? []) as {
+    status: TitleStatus;
+    minutes: number | null;
+  }[];
   return {
     total: rows.length,
     inProgress: rows.filter((r) => r.status === "in_progress").length,
     completed: rows.filter((r) => r.status === "completed").length,
     planned: rows.filter((r) => r.status === "planned").length,
+    totalMinutes: rows.reduce((s, r) => s + (r.minutes || 0), 0),
   };
 }

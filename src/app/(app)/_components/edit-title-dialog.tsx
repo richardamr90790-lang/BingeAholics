@@ -164,6 +164,21 @@ export function EditTitleDialog({
 
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">
+              Time spent{" "}
+              <span className="text-zinc-600">(minutes, optional)</span>
+            </label>
+            <input
+              name="minutes"
+              type="number"
+              min={0}
+              defaultValue={t.minutes || ""}
+              placeholder="e.g. 320"
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-zinc-400">
               Cover image URL <span className="text-zinc-600">(optional)</span>
             </label>
             <input

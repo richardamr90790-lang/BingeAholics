@@ -232,6 +232,9 @@ export async function updateTitle(
     ? Math.min(10, Math.max(1, parseInt(ratingRaw, 10) || 1))
     : null;
 
+  const minutesRaw = String(formData.get("minutes") ?? "").trim();
+  const minutes = minutesRaw ? Math.max(0, parseInt(minutesRaw, 10) || 0) : 0;
+
   const patch: Record<string, unknown> = {
     title,
     type,
@@ -241,6 +244,7 @@ export async function updateTitle(
     cover_url,
     status,
     rating,
+    minutes,
     notes,
     completed_at: status === "completed" ? new Date().toISOString() : null,
   };

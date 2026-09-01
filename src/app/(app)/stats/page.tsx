@@ -1,4 +1,5 @@
 import {
+  formatMinutes,
   listTitles,
   STATUS_LABELS,
   TYPE_LABELS,
@@ -37,6 +38,7 @@ export default async function StatsPage() {
   const completed = byStatus.get("completed") ?? 0;
   const completionRate = total ? Math.round((completed / total) * 100) : 0;
   const unitsConsumed = titles.reduce((s, t) => s + (t.current_unit || 0), 0);
+  const totalMinutes = titles.reduce((s, t) => s + (t.minutes || 0), 0);
 
   const typeRows = [...byType.entries()].sort((a, b) => b[1] - a[1]);
   const statusRows = (Object.keys(STATUS_LABELS) as TitleStatus[])
@@ -74,6 +76,7 @@ export default async function StatsPage() {
   const tiles = [
     { label: "Tracked", value: total },
     { label: "Completed", value: completed },
+    { label: "Total time", value: formatMinutes(totalMinutes) },
     { label: "Completion rate", value: `${completionRate}%` },
     { label: "Units logged", value: unitsConsumed },
   ];
@@ -88,7 +91,7 @@ export default async function StatsPage() {
         </div>
       ) : (
         <>
-          <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {tiles.map((t) => (
               <div
                 key={t.label}

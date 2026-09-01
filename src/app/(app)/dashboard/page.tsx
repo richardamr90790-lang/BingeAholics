@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { displayName } from "@/lib/user";
 import {
   CATEGORIES,
+  formatMinutes,
   getContinueWatching,
   getStats,
   listTitles,
@@ -25,6 +26,7 @@ import {
   PlayCircleIcon,
   CheckIcon,
   CalendarIcon,
+  HistoryIcon,
 } from "../_components/icons";
 
 const CATEGORY_STYLE: Record<
@@ -78,6 +80,12 @@ export default async function DashboardPage() {
       value: stats.planned,
       Icon: CalendarIcon,
       color: "text-amber-400",
+    },
+    {
+      label: "Total time",
+      value: formatMinutes(stats.totalMinutes),
+      Icon: HistoryIcon,
+      color: "text-fuchsia-400",
     },
   ];
 

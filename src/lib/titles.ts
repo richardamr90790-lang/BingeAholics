@@ -30,11 +30,21 @@ export type Title = {
   cover_url: string | null;
   rating: number | null;
   notes: string | null;
+  minutes: number;
   created_at: string;
   updated_at: string;
   started_at: string | null;
   completed_at: string | null;
 };
+
+export function formatMinutes(mins: number): string {
+  if (!mins || mins < 1) return "0m";
+  const h = Math.floor(mins / 60);
+  const m = Math.round(mins % 60);
+  if (h === 0) return `${m}m`;
+  if (m === 0) return `${h}h`;
+  return `${h}h ${m}m`;
+}
 
 export const TYPE_LABELS: Record<TitleType, string> = {
   anime: "Anime",
