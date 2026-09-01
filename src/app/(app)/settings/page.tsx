@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { avatarSeedOf, avatarStyleOf, storedDisplayName } from "@/lib/user";
+import { avatarIdOf, storedDisplayName } from "@/lib/user";
 import { SettingsForm } from "../_components/settings-form";
 import { AvatarPicker } from "./_avatar-picker";
 
@@ -16,10 +16,7 @@ export default async function SettingsPage() {
         initialName={storedDisplayName(user)}
         email={user?.email ?? ""}
       />
-      <AvatarPicker
-        initialStyle={avatarStyleOf(user)}
-        initialSeed={avatarSeedOf(user)}
-      />
+      <AvatarPicker initialId={avatarIdOf(user)} />
     </div>
   );
 }

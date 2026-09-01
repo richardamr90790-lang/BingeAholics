@@ -1,24 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { avatarUrl } from "@/lib/avatar";
+import { avatarSrc } from "@/lib/avatar";
 
 export function Avatar({
-  style,
-  seed,
+  id,
   fallback,
   size = 24,
   className = "",
 }: {
-  style: string;
-  seed: string;
+  id: number | null;
   fallback: string;
   size?: number;
   className?: string;
 }) {
   const [broken, setBroken] = useState(false);
 
-  if (broken) {
+  if (id == null || broken) {
     return (
       <span
         className={`grid shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 font-bold text-white ${className}`}
@@ -32,12 +30,13 @@ export function Avatar({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={avatarUrl(style, seed, size * 2)}
+      src={avatarSrc(id)}
       alt=""
       width={size}
       height={size}
       onError={() => setBroken(true)}
-      className={`shrink-0 rounded-full bg-white/5 ${className}`}
+      className={`shrink-0 rounded-full bg-white/5 object-cover ${className}`}
+      style={{ width: size, height: size }}
     />
   );
 }

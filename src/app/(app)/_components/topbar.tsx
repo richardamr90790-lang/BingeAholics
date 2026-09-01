@@ -7,12 +7,10 @@ import { Avatar } from "./avatar";
 
 export function Topbar({
   email,
-  avatarStyle,
-  avatarSeed,
+  avatarId,
 }: {
   email: string;
-  avatarStyle: string;
-  avatarSeed: string;
+  avatarId: number | null;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -23,12 +21,7 @@ export function Topbar({
           onClick={() => setMenuOpen((v) => !v)}
           className="flex items-center gap-2 rounded-lg border border-white/10 py-1.5 pl-1.5 pr-2 text-sm text-zinc-200 hover:bg-white/5"
         >
-          <Avatar
-            style={avatarStyle}
-            seed={avatarSeed}
-            fallback={email}
-            size={24}
-          />
+          <Avatar id={avatarId} fallback={email} size={24} />
           <span className="hidden max-w-[12ch] truncate sm:inline">{email}</span>
           <ChevronDownIcon className="size-4 text-zinc-500" />
         </button>

@@ -18,16 +18,8 @@ export function displayName(user: MinimalUser): string {
   return firstChunk.charAt(0).toUpperCase() + firstChunk.slice(1);
 }
 
-export function avatarStyleOf(user: MinimalUser): string {
-  const meta = (user?.user_metadata ?? {}) as { avatar_style?: string };
-  return typeof meta.avatar_style === "string" && meta.avatar_style
-    ? meta.avatar_style
-    : "adventurer";
-}
-
-export function avatarSeedOf(user: MinimalUser): string {
-  const meta = (user?.user_metadata ?? {}) as { avatar_seed?: string };
-  if (typeof meta.avatar_seed === "string" && meta.avatar_seed)
-    return meta.avatar_seed;
-  return user?.email ?? "bingeaholic";
+export function avatarIdOf(user: MinimalUser): number | null {
+  const meta = (user?.user_metadata ?? {}) as { avatar_id?: unknown };
+  const v = meta.avatar_id;
+  return typeof v === "number" && v >= 1 && v <= 50 ? Math.floor(v) : null;
 }

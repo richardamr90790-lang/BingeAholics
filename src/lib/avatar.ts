@@ -1,28 +1,15 @@
-export const AVATAR_STYLES = [
-  "adventurer",
-  "avataaars",
-  "big-smile",
-  "bottts",
-  "fun-emoji",
-  "notionists",
-  "open-peeps",
-  "micah",
-] as const;
+export const AVATAR_COUNT = 50;
 
-export type AvatarStyle = (typeof AVATAR_STYLES)[number];
-
-export function isAvatarStyle(v: string): v is AvatarStyle {
-  return (AVATAR_STYLES as readonly string[]).includes(v);
+export function isAvatarId(v: unknown): v is number {
+  return (
+    typeof v === "number" &&
+    Number.isInteger(v) &&
+    v >= 1 &&
+    v <= AVATAR_COUNT
+  );
 }
 
-/** DiceBear-generated SVG avatar (cartoon / caricature) for a style + seed. */
-export function avatarUrl(style: string, seed: string, size = 96): string {
-  const s = isAvatarStyle(style) ? style : "adventurer";
-  const params = new URLSearchParams({
-    seed: seed || "bingeaholic",
-    size: String(size),
-    radius: "50",
-    backgroundType: "gradientLinear",
-  });
-  return `https://api.dicebear.com/9.x/${s}/svg?${params.toString()}`;
+export function avatarSrc(id: number): string {
+  const n = isAvatarId(id) ? id : 1;
+  return `/avatars/${n}.webp`;
 }

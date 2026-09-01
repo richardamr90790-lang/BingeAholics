@@ -5,7 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
 import { STATUS_LABELS, TYPE_LABELS, type Title } from "@/lib/titles";
 import type { ActivityKind } from "@/lib/activity";
-import { isAvatarStyle } from "@/lib/avatar";
+import { isAvatarId } from "@/lib/avatar";
 
 export type ActionResult = { error?: string } | undefined;
 
@@ -262,15 +262,11 @@ export async function updateDisplayName(name: string): Promise<ActionResult> {
   revalidatePath("/", "layout");
 }
 
-export async function updateAvatar(
-  style: string,
-  seed: string,
-): Promise<ActionResult> {
+export async function updateAvatar(id: number): Promise<ActionResult> {
+  if (!isAvatarId(id)) return { error: "Invalid avatar" };
   const supabase = await createClient();
-  const cleanStyle = isAvatarStyle(style) ? style : "adventurer";
-  const cleanSeed = seed.trim().slice(0, 64) || "bingeaholic";
   const { error } = await supabase.auth.updateUser({
-    data: { avatar_style: cleanStyle, avatar_seed: cleanSeed },
+    data: { avatar_id: id },
   });
   if (error) return { error: error.message };
 
