@@ -84,6 +84,15 @@ export function categoryTypes(key: string): TitleType[] | null {
   return CATEGORIES.find((c) => c.key === key)?.types ?? null;
 }
 
+/** Accent hex per mode — layered subtly over the base purple/cosmic theme. */
+export const CATEGORY_ACCENT: Record<Category, string> = {
+  watch: "#fb7185", // rose
+  read: "#34d399", // emerald
+  listen: "#22d3ee", // cyan
+  play: "#a78bfa", // violet
+  learn: "#fbbf24", // gold
+};
+
 export function progressPercent(
   t: Pick<Title, "current_unit" | "total_units">,
 ): number | null {

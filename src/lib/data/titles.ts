@@ -6,6 +6,7 @@ export {
   TYPE_LABELS,
   STATUS_LABELS,
   CATEGORIES,
+  CATEGORY_ACCENT,
   categoryTypes,
   progressPercent,
   formatMinutes,

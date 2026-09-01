@@ -16,7 +16,7 @@ export function MyStuff({
         <h2 className="text-xl text-white">My Binge Vault</h2>
         <Link
           href={`/library?category=${activeCat}`}
-          className="text-sm text-violet-400 hover:text-violet-300"
+          className="acc-text text-sm transition hover:opacity-80"
         >
           View all
         </Link>

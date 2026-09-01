@@ -126,7 +126,7 @@ export function TitleCard({ title: t }: { title: Title }) {
           {pct != null && (
             <div className="mb-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
+                className="acc-bg h-full rounded-full transition-[background-color,width] duration-300"
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -141,7 +141,7 @@ export function TitleCard({ title: t }: { title: Title }) {
                   run(() => updateProgress(t.id, t.current_unit + 1))
                 }
                 disabled={pending || atEnd}
-                className="flex items-center gap-1 rounded-md bg-violet-600/20 px-2 py-1 text-xs font-medium text-violet-300 transition hover:bg-violet-600/30 disabled:opacity-40"
+                className="acc-bg-soft acc-text flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125 disabled:opacity-40"
               >
                 <PlusIcon className="size-3.5" />
                 {t.unit_label}

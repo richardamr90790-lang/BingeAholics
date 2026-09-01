@@ -37,6 +37,35 @@ h3,
   letter-spacing: 0.005em;
 }
 
+/* Mode accent — a single colour that shifts with the selected category.
+   Registered so it interpolates smoothly on change; defaults to the base violet
+   everywhere the scope isn't set (e.g. the library page). */
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #8b5cf6;
+}
+
+.accent-scope {
+  transition: --accent 320ms ease;
+}
+
+.acc-text {
+  color: var(--accent);
+}
+.acc-bg {
+  background-color: var(--accent);
+}
+.acc-bg-soft {
+  background-color: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.acc-border {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.acc-ring {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
 /* Login screen backdrop. The gradient over it keeps the form readable. */
 .app-bg {
   position: fixed;

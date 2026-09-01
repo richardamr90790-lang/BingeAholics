@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { displayName } from "@/lib/user";
 import {
   CATEGORIES,
+  CATEGORY_ACCENT,
   categoryTypes,
   formatMinutes,
   getContinueWatching,
@@ -36,7 +37,7 @@ const CATEGORY_STYLE: Record<
 > = {
   watch: { Icon: TvIcon, color: "text-rose-400" },
   read: { Icon: BookIcon, color: "text-emerald-400" },
-  listen: { Icon: HeadphonesIcon, color: "text-sky-400" },
+  listen: { Icon: HeadphonesIcon, color: "text-cyan-400" },
   play: { Icon: GamepadIcon, color: "text-violet-400" },
   learn: { Icon: GradCapIcon, color: "text-amber-400" },
 };
@@ -119,7 +120,10 @@ export default async function DashboardPage({
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a10]/15 to-[#0a0a10]/65" />
       </div>
 
-      <div className="space-y-8">
+      <div
+        className="accent-scope space-y-8"
+        style={{ "--accent": CATEGORY_ACCENT[activeCat] } as React.CSSProperties}
+      >
         {/* Full-bleed hero banner: breaks out of <main>'s padding so the
             artwork sits flush against the sidebar, the right edge and the
             topbar. Welcome on the left, stats on the right. */}
@@ -156,7 +160,9 @@ export default async function DashboardPage({
                       href={`/dashboard?cat=${c.key}`}
                       scroll={false}
                       className={`flex flex-col items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-                        active ? "bg-white/10" : "opacity-70 hover:opacity-100"
+                        active
+                          ? "acc-bg-soft acc-ring"
+                          : "opacity-60 hover:opacity-100"
                       }`}
                     >
                       <Icon className={`size-6 ${color}`} />
@@ -203,7 +209,7 @@ export default async function DashboardPage({
                 <h2 className="text-xl text-white">One More.....</h2>
                 <Link
                   href={`/library?status=in_progress&category=${activeCat}`}
-                  className="text-sm text-violet-400 hover:text-violet-300"
+                  className="acc-text text-sm transition hover:opacity-80"
                 >
                   View all
                 </Link>
