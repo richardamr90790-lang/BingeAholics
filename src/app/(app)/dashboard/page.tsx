@@ -74,6 +74,21 @@ export default async function DashboardPage() {
 
   return (
     <>
+      {/* Ambient space backdrop behind the whole dashboard (fixed to the
+          viewport, sits over the layout's flat dark but behind all content). */}
+      <div className="pointer-events-none fixed inset-0 -z-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url(/space-bg.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+        <div className="absolute inset-0 bg-[#0a0a10]/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0a0a10]/20 to-[#0a0a10]/72" />
+      </div>
+
       <div className="space-y-8">
         {/* Full-bleed hero banner: breaks out of <main>'s padding so the
             artwork sits flush against the sidebar, the right edge and the
