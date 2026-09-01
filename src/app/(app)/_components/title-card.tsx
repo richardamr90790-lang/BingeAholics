@@ -19,7 +19,6 @@ import {
   HeadphonesIcon,
   LibraryIcon,
   PlayCircleIcon,
-  PlusIcon,
   TrashIcon,
   TvIcon,
 } from "./icons";
@@ -205,9 +204,11 @@ export function TitleCard({ title: t }: { title: Title }) {
                   : "Jump back in"}
             </a>
           )}
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-zinc-500">
-              {pct != null ? `${pct}%` : STATUS_LABELS[t.status]}
+          <div className="flex items-center justify-between gap-2">
+            <span className="min-w-0 truncate text-xs text-zinc-500">
+              {t.current_unit > 0
+                ? `${t.unit_label} ${t.current_unit} · ${STATUS_LABELS[t.status]}`
+                : STATUS_LABELS[t.status]}
             </span>
             {t.status !== "completed" && (
               <button
@@ -215,10 +216,21 @@ export function TitleCard({ title: t }: { title: Title }) {
                   run(() => updateProgress(t.id, t.current_unit + 1))
                 }
                 disabled={pending || atEnd}
-                className="acc-bg-soft acc-text flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125 disabled:opacity-40"
+                className="acc-bg-soft acc-text flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition hover:brightness-125 disabled:opacity-40"
               >
-                <PlusIcon className="size-3.5" />
-                {t.unit_label}
+                Next {t.unit_label}
+                <svg
+                  viewBox="0 0 24 24"
+                  className="size-3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </button>
             )}
           </div>
