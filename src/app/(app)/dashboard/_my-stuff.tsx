@@ -2,7 +2,6 @@ import Link from "next/link";
 import { type Category, type Title } from "@/lib/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
-import { CatTabs } from "./_cat-tabs";
 
 export function MyStuff({
   titles,
@@ -22,8 +21,6 @@ export function MyStuff({
           View all
         </Link>
       </div>
-
-      <CatTabs activeCat={activeCat} />
 
       {titles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">

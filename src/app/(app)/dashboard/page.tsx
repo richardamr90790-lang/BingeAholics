@@ -17,7 +17,6 @@ import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
 import { RecentActivity } from "./_recent-activity";
 import { MyStuff } from "./_my-stuff";
-import { CatTabs } from "./_cat-tabs";
 import {
   TvIcon,
   BookIcon,
@@ -209,7 +208,6 @@ export default async function DashboardPage({
                   View all
                 </Link>
               </div>
-              <CatTabs activeCat={activeCat} />
               {oneMore.length === 0 ? (
                 <EmptyState
                   message={
