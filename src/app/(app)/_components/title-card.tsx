@@ -191,12 +191,12 @@ export function TitleCard({ title: t }: { title: Title }) {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-3">
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5">
         <div>
-          <p className="line-clamp-2 text-sm font-medium text-zinc-100">
+          <p className="line-clamp-2 text-[13px] font-medium leading-snug text-zinc-100">
             {t.title}
           </p>
-          <p className="mt-0.5 text-xs text-zinc-500">
+          <p className="mt-0.5 text-[11px] text-zinc-500">
             {TYPE_LABELS[t.type]}
             {t.status === "completed"
               ? " · Completed"

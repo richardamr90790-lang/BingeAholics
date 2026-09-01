@@ -109,7 +109,7 @@ export default async function LibraryPage({
           {!q && <AddTitleButton label="Add a title" variant="ghost" />}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
           {shown.map((t) => (
             <TitleCard key={t.id} title={t} />
           ))}
