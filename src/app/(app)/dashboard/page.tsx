@@ -18,6 +18,7 @@ import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
 import { RecentActivity } from "./_recent-activity";
 import { MyStuff } from "./_my-stuff";
+import { SectionHeader } from "./_section-header";
 import {
   TvIcon,
   BookIcon,
@@ -243,15 +244,12 @@ export default async function DashboardPage({
             </div>
 
             <section>
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-xl text-white">One More.....</h2>
-                <Link
-                  href={`/library?status=in_progress&category=${activeCat}`}
-                  className="acc-text text-sm transition hover:opacity-80"
-                >
-                  View all
-                </Link>
-              </div>
+              <SectionHeader
+                title="One More....."
+                subtitle="Whatever you're currently into — jump back in."
+                viewAllHref={`/library?status=in_progress&category=${activeCat}`}
+                bgPos="100% 18%"
+              />
               {oneMore.length === 0 ? (
                 <EmptyState
                   message={

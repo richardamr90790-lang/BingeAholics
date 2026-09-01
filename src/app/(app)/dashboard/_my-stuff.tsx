@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { type Category, type Title } from "@/lib/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import { SectionHeader } from "./_section-header";
 
 export function MyStuff({
   titles,
@@ -12,15 +12,12 @@ export function MyStuff({
 }) {
   return (
     <section>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xl text-white">My Binge Vault</h2>
-        <Link
-          href={`/library?category=${activeCat}`}
-          className="acc-text text-sm transition hover:opacity-80"
-        >
-          View all
-        </Link>
-      </div>
+      <SectionHeader
+        title="My Binge Vault"
+        subtitle="Everything you're tracking."
+        viewAllHref={`/library?category=${activeCat}`}
+        bgPos="100% 90%"
+      />
 
       {titles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
