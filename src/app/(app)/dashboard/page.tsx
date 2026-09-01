@@ -117,10 +117,6 @@ export default async function DashboardPage() {
                     </Link>
                   );
                 })}
-
-                <div className="ml-auto self-center">
-                  <AddTitleButton label="Add a title" />
-                </div>
               </div>
             </div>
 
