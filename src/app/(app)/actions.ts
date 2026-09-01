@@ -449,7 +449,34 @@ export async function updateAvatar(id: number): Promise<ActionResult> {
   if (!isAvatarId(id)) return { error: "Invalid avatar" };
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({
-    data: { avatar_id: id },
+    // picking a preset clears any custom upload
+    data: { avatar_id: id, avatar_url: null },
+  });
+  if (error) return { error: error.message };
+
+  revalidatePath("/", "layout");
+}
+
+export async function updateAvatarUrl(url: string): Promise<ActionResult> {
+  const supabase = await createClient();
+  const clean = url.trim();
+
+  if (clean) {
+    let parsed: URL;
+    try {
+      parsed = new URL(clean);
+    } catch {
+      return { error: "Invalid image URL" };
+    }
+    const base = new URL(
+      process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://invalid.invalid",
+    );
+    if (parsed.protocol !== "https:" || parsed.hostname !== base.hostname)
+      return { error: "Unexpected image host" };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { avatar_url: clean || null },
   });
   if (error) return { error: error.message };
 

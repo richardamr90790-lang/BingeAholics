@@ -5,18 +5,22 @@ import { avatarSrc } from "@/lib/avatar";
 
 export function Avatar({
   id,
+  url,
   fallback,
   size = 24,
   className = "",
 }: {
   id: number | null;
+  url?: string | null;
   fallback: string;
   size?: number;
   className?: string;
 }) {
   const [broken, setBroken] = useState(false);
 
-  if (id == null || broken) {
+  const src = url || (id != null ? avatarSrc(id) : null);
+
+  if (src == null || broken) {
     return (
       <span
         className={`grid shrink-0 place-items-center rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 font-bold text-white ${className}`}
@@ -30,7 +34,7 @@ export function Avatar({
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={avatarSrc(id)}
+      src={src}
       alt=""
       width={size}
       height={size}

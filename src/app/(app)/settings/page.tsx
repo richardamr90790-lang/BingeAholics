@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { avatarIdOf, storedDisplayName } from "@/lib/user";
+import { avatarIdOf, avatarUrlOf, storedDisplayName } from "@/lib/user";
 import { SettingsForm } from "../_components/settings-form";
 import { PageHeader } from "../_components/page-header";
 import { AvatarPicker } from "./_avatar-picker";
@@ -23,7 +23,11 @@ export default async function SettingsPage() {
         initialName={storedDisplayName(user)}
         email={user?.email ?? ""}
       />
-      <AvatarPicker initialId={avatarIdOf(user)} />
+      <AvatarPicker
+        initialId={avatarIdOf(user)}
+        initialUrl={avatarUrlOf(user)}
+        email={user?.email ?? ""}
+      />
       <ReplayTutorialButton />
     </div>
   );

@@ -13,9 +13,11 @@ import { useToast } from "./toast";
 export function Topbar({
   email,
   avatarId,
+  avatarUrl,
 }: {
   email: string;
   avatarId: number | null;
+  avatarUrl: string | null;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
@@ -43,7 +45,7 @@ export function Topbar({
           onClick={() => setMenuOpen((v) => !v)}
           className="flex items-center gap-2 rounded-lg border border-white/10 py-1.5 pl-1.5 pr-2 text-sm text-zinc-200 hover:bg-white/5"
         >
-          <Avatar id={avatarId} fallback={email} size={24} />
+          <Avatar id={avatarId} url={avatarUrl} fallback={email} size={24} />
           <span className="hidden max-w-[12ch] truncate sm:inline">{email}</span>
           <ChevronDownIcon className="size-4 text-zinc-500" />
         </button>

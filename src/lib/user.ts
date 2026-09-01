@@ -24,6 +24,13 @@ export function avatarIdOf(user: MinimalUser): number | null {
   return typeof v === "number" && v >= 1 && v <= 50 ? Math.floor(v) : null;
 }
 
+/** A user-uploaded avatar URL, if they set one (takes precedence over avatar_id). */
+export function avatarUrlOf(user: MinimalUser): string | null {
+  const meta = (user?.user_metadata ?? {}) as { avatar_url?: unknown };
+  const v = meta.avatar_url;
+  return typeof v === "string" && v.trim().length > 0 ? v : null;
+}
+
 /** Has the user finished (or skipped) the welcome tour? */
 export function hasOnboarded(user: MinimalUser): boolean {
   const meta = (user?.user_metadata ?? {}) as { onboarded_at?: unknown };

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { avatarIdOf, hasOnboarded } from "@/lib/user";
+import { avatarIdOf, avatarUrlOf, hasOnboarded } from "@/lib/user";
 import { Sidebar } from "./_components/sidebar";
 import { Topbar } from "./_components/topbar";
 import { ToastProvider } from "./_components/toast";
@@ -24,7 +24,11 @@ export default async function AppLayout({
         <PageAmbience />
         <Sidebar />
         <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar email={user.email ?? ""} avatarId={avatarIdOf(user)} />
+          <Topbar
+            email={user.email ?? ""}
+            avatarId={avatarIdOf(user)}
+            avatarUrl={avatarUrlOf(user)}
+          />
           <main className="w-full flex-1 p-4 sm:p-6">{children}</main>
         </div>
       </div>
