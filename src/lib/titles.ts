@@ -99,3 +99,10 @@ export function progressPercent(
   if (!t.total_units || t.total_units <= 0) return null;
   return Math.min(100, Math.round((t.current_unit / t.total_units) * 100));
 }
+
+/** Stable 0–359 hue from a string, for coverless card placeholders. */
+export function titleHue(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h % 360;
+}

@@ -7,10 +7,59 @@ import {
   progressPercent,
   STATUS_LABELS,
   TYPE_LABELS,
+  titleHue,
   type Title,
+  type TitleType,
 } from "@/lib/titles";
-import { CheckIcon, PlusIcon, TrashIcon } from "./icons";
+import {
+  BookIcon,
+  CheckIcon,
+  GamepadIcon,
+  GradCapIcon,
+  HeadphonesIcon,
+  LibraryIcon,
+  PlayCircleIcon,
+  PlusIcon,
+  TrashIcon,
+  TvIcon,
+} from "./icons";
 import { EditTitleDialog } from "./edit-title-dialog";
+
+const PLACEHOLDER_ICON: Record<TitleType, typeof BookIcon> = {
+  anime: TvIcon,
+  video: PlayCircleIcon,
+  manga: BookIcon,
+  manhwa: BookIcon,
+  book: BookIcon,
+  podcast: HeadphonesIcon,
+  game: GamepadIcon,
+  course: GradCapIcon,
+  other: LibraryIcon,
+};
+
+function CoverPlaceholder({
+  title,
+  type,
+}: {
+  title: string;
+  type: TitleType;
+}) {
+  const hue = titleHue(title);
+  const Icon = PLACEHOLDER_ICON[type];
+  return (
+    <div
+      className="relative flex size-full items-center justify-center p-3 text-center"
+      style={{
+        background: `linear-gradient(145deg, hsl(${hue} 42% 22%), hsl(${(hue + 55) % 360} 36% 10%))`,
+      }}
+    >
+      <Icon className="absolute size-16 text-white/10" />
+      <span className="relative line-clamp-3 text-sm font-medium text-white/85">
+        {title}
+      </span>
+    </div>
+  );
+}
 
 export function TitleCard({ title: t }: { title: Title }) {
   const router = useRouter();
@@ -42,9 +91,7 @@ export function TitleCard({ title: t }: { title: Title }) {
             loading="lazy"
           />
         ) : (
-          <div className="grid size-full place-items-center p-3 text-center text-sm font-medium text-zinc-500">
-            {t.title}
-          </div>
+          <CoverPlaceholder title={t.title} type={t.type} />
         )}
 
         <div className="absolute right-1.5 top-1.5">
