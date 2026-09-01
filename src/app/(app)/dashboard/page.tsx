@@ -17,6 +17,7 @@ import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
 import { RecentActivity } from "./_recent-activity";
 import { MyStuff } from "./_my-stuff";
+import { CatTabs } from "./_cat-tabs";
 import {
   TvIcon,
   BookIcon,
@@ -67,6 +68,7 @@ export default async function DashboardPage({
     ]);
 
   const vaultTitles = library.filter((t) => vaultTypes.includes(t.type));
+  const oneMore = continueWatching.filter((t) => vaultTypes.includes(t.type));
 
   const statRows = [
     {
@@ -201,23 +203,24 @@ export default async function DashboardPage({
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl text-white">One More.....</h2>
                 <Link
-                  href="/library?status=in_progress"
+                  href={`/library?status=in_progress&category=${activeCat}`}
                   className="text-sm text-violet-400 hover:text-violet-300"
                 >
                   View all
                 </Link>
               </div>
-              {continueWatching.length === 0 ? (
+              <CatTabs activeCat={activeCat} />
+              {oneMore.length === 0 ? (
                 <EmptyState
                   message={
                     stats.total === 0
                       ? "Nothing tracked yet."
-                      : "Nothing in progress. Bump a title to get going."
+                      : `Nothing in progress to ${activeCat}.`
                   }
                 />
               ) : (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                  {continueWatching.map((t) => (
+                  {oneMore.map((t) => (
                     <TitleCard key={t.id} title={t} />
                   ))}
                 </div>

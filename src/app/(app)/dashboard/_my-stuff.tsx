@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { CATEGORIES, type Category, type Title } from "@/lib/titles";
+import { type Category, type Title } from "@/lib/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import { CatTabs } from "./_cat-tabs";
 
 export function MyStuff({
   titles,
@@ -22,22 +23,7 @@ export function MyStuff({
         </Link>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.key}
-            href={`/dashboard?cat=${c.key}`}
-            scroll={false}
-            className={`rounded-full px-3 py-1.5 text-sm transition ${
-              activeCat === c.key
-                ? "bg-violet-600 font-medium text-white"
-                : "border border-white/10 text-zinc-400 hover:text-zinc-100"
-            }`}
-          >
-            {c.label}
-          </Link>
-        ))}
-      </div>
+      <CatTabs activeCat={activeCat} />
 
       {titles.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
