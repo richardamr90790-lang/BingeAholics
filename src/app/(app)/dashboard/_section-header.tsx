@@ -28,7 +28,13 @@ export function SectionHeader({
   );
 
   return (
-    <div className="relative mb-4 overflow-hidden rounded-xl border border-white/10">
+    <div
+      className={`relative mb-4 overflow-hidden rounded-xl border transition ${
+        onToggle
+          ? "border-white/15 hover:border-white/25"
+          : "border-white/10"
+      }`}
+    >
       <div
         className="absolute inset-0"
         style={{
@@ -44,24 +50,51 @@ export function SectionHeader({
             type="button"
             onClick={onToggle}
             aria-expanded={expanded}
-            className="flex min-w-0 items-center gap-2.5 text-left"
+            className="flex min-w-0 items-center gap-3 text-left"
           >
-            <ChevronDownIcon
-              className={`size-4 shrink-0 text-zinc-400 transition-transform ${
+            <span
+              className={`grid size-7 shrink-0 place-items-center rounded-full border border-white/25 bg-white/10 text-zinc-100 transition-transform ${
                 expanded ? "" : "-rotate-90"
               }`}
-            />
+            >
+              <ChevronDownIcon className="size-4" />
+            </span>
             <span className="min-w-0">{heading}</span>
           </button>
         ) : (
           <div className="min-w-0">{heading}</div>
         )}
-        <Link
-          href={viewAllHref}
-          className="acc-text shrink-0 text-sm transition hover:opacity-80"
-        >
-          View all
-        </Link>
+
+        {onToggle ? (
+          <div className="flex shrink-0 items-center gap-3">
+            <Link
+              href={viewAllHref}
+              className="hidden text-xs text-zinc-400 transition hover:text-zinc-200 sm:inline"
+            >
+              View all
+            </Link>
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-expanded={expanded}
+              className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-white/20"
+            >
+              {expanded ? "Hide" : "Show"}
+              <ChevronDownIcon
+                className={`size-4 transition-transform ${
+                  expanded ? "" : "-rotate-90"
+                }`}
+              />
+            </button>
+          </div>
+        ) : (
+          <Link
+            href={viewAllHref}
+            className="acc-text shrink-0 text-sm transition hover:opacity-80"
+          >
+            View all
+          </Link>
+        )}
       </div>
     </div>
   );
