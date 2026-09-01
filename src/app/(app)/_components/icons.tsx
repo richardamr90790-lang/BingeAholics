@@ -203,6 +203,14 @@ export function GradCapIcon({ className }: IconProps) {
   );
 }
 
+export function SparkleIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="M12 3l2.2 6.2L20.5 11l-6.3 1.8L12 19l-2.2-6.2L3.5 11l6.3-1.8z" />
+    </svg>
+  );
+}
+
 export function PauseIcon({ className }: IconProps) {
   return (
     <svg {...base(className)}>

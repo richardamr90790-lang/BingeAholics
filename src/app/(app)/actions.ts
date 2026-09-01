@@ -45,7 +45,9 @@ async function logActivity(
   }
 }
 
-export async function createTitle(formData: FormData): Promise<ActionResult> {
+export async function createTitle(
+  formData: FormData,
+): Promise<{ error?: string; id?: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -107,6 +109,7 @@ export async function createTitle(formData: FormData): Promise<ActionResult> {
   });
 
   revalidateApp();
+  return { id: inserted?.id };
 }
 
 export async function updateProgress(
@@ -273,6 +276,107 @@ export async function updateTitle(
 
   const { error } = await supabase.from("titles").update(patch).eq("id", id);
   if (error) return { error: error.message };
+
+  revalidateApp();
+}
+
+const COVER_STYLE =
+  "cinematic Korean manhwa / webtoon cover art, semi-realistic digital painting, " +
+  "dramatic moody lighting, atmospheric, mature art style, muted cinematic colour grade, " +
+  "portrait composition, highly detailed, sharp focus, no text, no watermark, no signature, " +
+  "not chibi, not childish";
+
+function coverPrompt(title: string, type: string): string {
+  const kind =
+    type === "manhwa" || type === "manga"
+      ? "webtoon key art"
+      : type === "anime"
+        ? "anime key visual"
+        : type === "game"
+          ? "video game key art"
+          : type === "book"
+            ? "book cover illustration"
+            : "dramatic poster art";
+  return `${title} — ${kind}, ${COVER_STYLE}`;
+}
+
+function coverSeed(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h % 1_000_000;
+}
+
+// Generates a cover image from the title text via pollinations.ai (free, no key),
+// stores it in the `covers` bucket, and points the row at it. Pass `seedOverride`
+// (any number) to force a fresh, different image on "regenerate".
+export async function generateCover(
+  id: string,
+  seedOverride?: number,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Not signed in" };
+
+  const { data: row, error: fetchError } = await supabase
+    .from("titles")
+    .select("title, type, user_id")
+    .eq("id", id)
+    .single();
+  if (fetchError || !row) return { error: fetchError?.message ?? "Not found" };
+  if (row.user_id !== user.id) return { error: "Not allowed" };
+
+  const seed = seedOverride ?? coverSeed(row.title);
+  const src =
+    "https://image.pollinations.ai/prompt/" +
+    encodeURIComponent(coverPrompt(row.title, row.type)) +
+    `?width=768&height=1024&seed=${seed}&nologo=true&nofeed=true&model=flux`;
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 55_000);
+  let bytes: ArrayBuffer;
+  let contentType: string;
+  try {
+    const res = await fetch(src, {
+      signal: controller.signal,
+      cache: "no-store",
+      headers: { Accept: "image/*" },
+    });
+    if (!res.ok)
+      return { error: `Image service error (${res.status}). Try again shortly.` };
+    contentType = res.headers.get("content-type") ?? "image/jpeg";
+    if (!contentType.startsWith("image/"))
+      return { error: "Image service was unavailable. Try again in a minute." };
+    bytes = await res.arrayBuffer();
+  } catch {
+    return { error: "Image generation timed out. Try again." };
+  } finally {
+    clearTimeout(timer);
+  }
+  if (bytes.byteLength < 1024)
+    return { error: "The generated image came back empty. Try again." };
+
+  const ext = contentType.includes("png")
+    ? "png"
+    : contentType.includes("webp")
+      ? "webp"
+      : "jpg";
+  const path = `${user.id}/ai-${crypto.randomUUID()}.${ext}`;
+  const { error: upErr } = await supabase.storage
+    .from("covers")
+    .upload(path, bytes, { contentType, upsert: false });
+  if (upErr) return { error: upErr.message };
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("covers").getPublicUrl(path);
+
+  const { error: updErr } = await supabase
+    .from("titles")
+    .update({ cover_url: publicUrl, cover_position: "50% 50%" })
+    .eq("id", id);
+  if (updErr) return { error: updErr.message };
 
   revalidateApp();
 }

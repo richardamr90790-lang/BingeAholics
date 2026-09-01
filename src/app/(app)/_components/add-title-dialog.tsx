@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { createTitle } from "../actions";
+import { createTitle, generateCover } from "../actions";
 import { TYPE_LABELS, type TitleType } from "@/lib/titles";
 import { CoverInput } from "./cover-input";
 
@@ -30,6 +30,7 @@ export function AddTitleDialog({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [unitLabel, setUnitLabel] = useState("Part");
+  const [autoCover, setAutoCover] = useState(true);
 
   useEffect(() => {
     if (!open) return;
@@ -44,6 +45,7 @@ export function AddTitleDialog({
     e.preventDefault();
     setError(null);
     const formData = new FormData(e.currentTarget);
+    const wantsCover = autoCover && !String(formData.get("cover_url") ?? "").trim();
     startTransition(async () => {
       const res = await createTitle(formData);
       if (res?.error) {
@@ -51,6 +53,13 @@ export function AddTitleDialog({
       } else {
         onClose();
         router.refresh();
+        if (wantsCover && res?.id) {
+          // Detached: runs as its own request; the card shows its placeholder
+          // until this lands, then we refresh again.
+          generateCover(res.id).then((r) => {
+            if (!r?.error) router.refresh();
+          });
+        }
       }
     });
   }
@@ -149,6 +158,22 @@ export function AddTitleDialog({
           </div>
 
           <CoverInput />
+
+          <label className="flex items-start gap-2 text-xs text-zinc-400">
+            <input
+              type="checkbox"
+              checked={autoCover}
+              onChange={(e) => setAutoCover(e.target.checked)}
+              className="mt-0.5 accent-violet-500"
+            />
+            <span>
+              ✨ Generate a cover from the title if I don&apos;t upload one
+              <span className="mt-0.5 block text-zinc-600">
+                Takes a few seconds after saving. You can redo it from the card
+                menu.
+              </span>
+            </span>
+          </label>
 
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">

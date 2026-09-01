@@ -9,6 +9,10 @@ import {
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
 
+// AI cover generation (a Server Action reached from the title cards / add
+// dialog on this page) can take longer than the default function budget.
+export const maxDuration = 60;
+
 const STATUSES = Object.keys(STATUS_LABELS) as TitleStatus[];
 
 export default async function LibraryPage({

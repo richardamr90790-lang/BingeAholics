@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { deleteTitle, setStatus } from "../actions";
+import { deleteTitle, generateCover, setStatus } from "../actions";
 import {
   progressPercent,
   STATUS_LABELS,
@@ -19,6 +19,7 @@ import {
   HeadphonesIcon,
   LibraryIcon,
   PlayCircleIcon,
+  SparkleIcon,
   TrashIcon,
   TvIcon,
 } from "./icons";
@@ -67,6 +68,7 @@ export function TitleCard({ title: t }: { title: Title }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const [advancing, setAdvancing] = useState(false);
+  const [coverBusy, setCoverBusy] = useState(false);
   const pct = progressPercent(t);
 
   function run(fn: () => Promise<{ error?: string } | undefined>) {
@@ -75,6 +77,20 @@ export function TitleCard({ title: t }: { title: Title }) {
       if (res?.error) alert(res.error);
       else router.refresh();
       setMenuOpen(false);
+    });
+  }
+
+  function generate() {
+    setMenuOpen(false);
+    setCoverBusy(true);
+    startTransition(async () => {
+      const res = await generateCover(
+        t.id,
+        t.cover_url ? Math.floor(Math.random() * 1_000_000) : undefined,
+      );
+      setCoverBusy(false);
+      if (res?.error) alert(res.error);
+      else router.refresh();
     });
   }
 
@@ -94,6 +110,15 @@ export function TitleCard({ title: t }: { title: Title }) {
           />
         ) : (
           <CoverPlaceholder title={t.title} type={t.type} />
+        )}
+
+        {coverBusy && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-black/75 px-3 text-center">
+            <div className="size-6 animate-spin rounded-full border-2 border-white/20 border-t-white/80" />
+            <span className="text-[11px] font-medium text-zinc-300">
+              Generating cover…
+            </span>
+          </div>
         )}
 
         <div className="absolute right-1.5 top-1.5">
@@ -125,6 +150,13 @@ export function TitleCard({ title: t }: { title: Title }) {
                   className="block w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5"
                 >
                   Edit
+                </button>
+                <button
+                  onClick={generate}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-zinc-200 hover:bg-white/5"
+                >
+                  <SparkleIcon className="size-3.5" />
+                  {t.cover_url ? "Regenerate cover" : "Generate cover"}
                 </button>
                 {t.status !== "completed" && (
                   <button

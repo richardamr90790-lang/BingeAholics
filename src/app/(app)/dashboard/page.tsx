@@ -33,6 +33,10 @@ import {
   XCircleIcon,
 } from "../_components/icons";
 
+// AI cover generation (a Server Action reached from the title cards on this
+// page) can take longer than the default function budget.
+export const maxDuration = 60;
+
 const CATEGORY_STYLE: Record<
   Category,
   { Icon: typeof TvIcon; color: string }
