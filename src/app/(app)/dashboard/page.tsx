@@ -220,7 +220,11 @@ export default async function DashboardPage() {
           </div>
 
           <aside>
-            <MiniCalendar events={calendarEvents} />
+            <MiniCalendar
+              initialYear={now.getFullYear()}
+              initialMonth={now.getMonth() + 1}
+              initialEvents={calendarEvents}
+            />
           </aside>
         </div>
       </div>

@@ -22,11 +22,13 @@ const inputClass =
 export function CalendarView({
   year,
   month,
+  initialDay,
   events,
   titles,
 }: {
   year: number;
   month: number;
+  initialDay?: number;
   events: CalendarEvent[];
   titles: { id: string; title: string }[];
 }) {
@@ -40,9 +42,16 @@ export function CalendarView({
   const todayDay = now.getDate();
 
   const [selected, setSelected] = useState<number | null>(
-    isCurrentMonth ? todayDay : null,
+    initialDay ?? (isCurrentMonth ? todayDay : null),
   );
   const [adding, setAdding] = useState(false);
+
+  const thisYear = now.getFullYear();
+  const yearOptions = Array.from({ length: 9 }, (_, i) => thisYear - 3 + i);
+
+  function goTo(y: number, m: number) {
+    router.push(`/calendar?y=${y}&m=${m}`);
+  }
 
   const byDay = new Map<number, CalendarEvent[]>();
   for (const e of events) {
@@ -108,10 +117,31 @@ export function CalendarView({
       <div className="grid gap-4 lg:grid-cols-[1fr_20rem]">
         {/* Month grid */}
         <div className="rounded-2xl border border-white/10 bg-[#14141c] p-4 sm:p-5">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">
-              {MONTH_NAMES[month - 1]} {year}
-            </h2>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <select
+                value={month}
+                onChange={(e) => goTo(year, Number(e.target.value))}
+                className="rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm font-medium text-white outline-none focus:border-violet-500/70"
+              >
+                {MONTH_NAMES.map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={year}
+                onChange={(e) => goTo(Number(e.target.value), month)}
+                className="rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm font-medium text-white outline-none focus:border-violet-500/70"
+              >
+                {yearOptions.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex gap-1">
               <Link
                 href={`/calendar?y=${prev.y}&m=${prev.m}`}
