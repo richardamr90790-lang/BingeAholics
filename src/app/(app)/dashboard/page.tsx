@@ -8,8 +8,10 @@ import {
   listTitles,
   type Category,
 } from "@/lib/data/titles";
+import { listEventsForMonth } from "@/lib/data/calendar";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import { MiniCalendar } from "./_mini-calendar";
 import {
   TvIcon,
   BookIcon,
@@ -39,10 +41,12 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [continueWatching, stats, library] = await Promise.all([
+  const now = new Date();
+  const [continueWatching, stats, library, calendarEvents] = await Promise.all([
     getContinueWatching(),
     getStats(),
     listTitles(),
+    listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
   ]);
 
   const statRows = [
@@ -162,55 +166,63 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">
-              Continue Watching
-            </h2>
-            <Link
-              href="/library"
-              className="text-sm text-violet-400 hover:text-violet-300"
-            >
-              View all
-            </Link>
-          </div>
-          {continueWatching.length === 0 ? (
-            <EmptyState
-              message={
-                stats.total === 0
-                  ? "Nothing tracked yet."
-                  : "Nothing in progress. Bump a title to get going."
-              }
-            />
-          ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {continueWatching.map((t) => (
-                <TitleCard key={t.id} title={t} />
-              ))}
-            </div>
-          )}
-        </section>
+        <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+          <div className="min-w-0 space-y-8">
+            <section>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white">
+                  Continue Watching
+                </h2>
+                <Link
+                  href="/library"
+                  className="text-sm text-violet-400 hover:text-violet-300"
+                >
+                  View all
+                </Link>
+              </div>
+              {continueWatching.length === 0 ? (
+                <EmptyState
+                  message={
+                    stats.total === 0
+                      ? "Nothing tracked yet."
+                      : "Nothing in progress. Bump a title to get going."
+                  }
+                />
+              ) : (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                  {continueWatching.map((t) => (
+                    <TitleCard key={t.id} title={t} />
+                  ))}
+                </div>
+              )}
+            </section>
 
-        <section>
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">My Library</h2>
-            <Link
-              href="/library"
-              className="text-sm text-violet-400 hover:text-violet-300"
-            >
-              View all
-            </Link>
+            <section>
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-white">My Library</h2>
+                <Link
+                  href="/library"
+                  className="text-sm text-violet-400 hover:text-violet-300"
+                >
+                  View all
+                </Link>
+              </div>
+              {library.length === 0 ? (
+                <EmptyState message="Your library is empty." />
+              ) : (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                  {library.slice(0, 12).map((t) => (
+                    <TitleCard key={t.id} title={t} />
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
-          {library.length === 0 ? (
-            <EmptyState message="Your library is empty." />
-          ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-              {library.slice(0, 12).map((t) => (
-                <TitleCard key={t.id} title={t} />
-              ))}
-            </div>
-          )}
-        </section>
+
+          <aside>
+            <MiniCalendar events={calendarEvents} />
+          </aside>
+        </div>
       </div>
     </>
   );
