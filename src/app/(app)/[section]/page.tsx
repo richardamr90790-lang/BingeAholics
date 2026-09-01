@@ -8,7 +8,6 @@ const SECTIONS: Record<string, string> = {
   collections: "Collections",
   history: "History",
   stats: "Stats",
-  calendar: "Calendar",
 };
 
 export function generateStaticParams() {
