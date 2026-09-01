@@ -6,7 +6,6 @@ const SECTIONS: Record<string, string> = {
   discover: "Discover",
   watchlist: "Watchlist",
   collections: "Collections",
-  stats: "Stats",
 };
 
 export function generateStaticParams() {
