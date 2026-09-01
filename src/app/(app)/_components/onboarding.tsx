@@ -201,7 +201,7 @@ export function Onboarding() {
         )}
 
         {step === 4 && (
-          <Cinematic art="/space-bg.png" artPos="center" modeIcons>
+          <Cinematic art="/onboarding-finish.png" artPos="center 62%">
             <h2 className="font-display text-3xl leading-tight text-white sm:text-4xl">
               You&apos;re a <span className={GRAD}>Bingeaholic</span> now
             </h2>
@@ -261,12 +261,10 @@ function Panel({ children }: { children: React.ReactNode }) {
 function Cinematic({
   art,
   artPos,
-  modeIcons,
   children,
 }: {
   art: string;
   artPos: string;
-  modeIcons?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -280,18 +278,6 @@ function Cinematic({
         }}
       >
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#14141c]" />
-        {modeIcons && (
-          <div
-            className="absolute inset-x-0 bottom-6 flex justify-center gap-4 text-2xl"
-            style={{
-              filter: "drop-shadow(0 0 10px rgba(167,139,250,0.75))",
-            }}
-          >
-            {MODES.map((m) => (
-              <span key={m.key}>{m.emoji}</span>
-            ))}
-          </div>
-        )}
       </div>
       <div className="flex min-h-[16rem] flex-col justify-center p-8">
         {children}
