@@ -29,6 +29,8 @@ import {
   CheckIcon,
   CalendarIcon,
   HistoryIcon,
+  PauseIcon,
+  XCircleIcon,
 } from "../_components/icons";
 
 const CATEGORY_STYLE: Record<
@@ -95,6 +97,26 @@ export default async function DashboardPage({
       Icon: CalendarIcon,
       color: "text-amber-400",
     },
+    ...(stats.onHold > 0
+      ? [
+          {
+            label: "On hold",
+            value: stats.onHold,
+            Icon: PauseIcon,
+            color: "text-orange-400",
+          },
+        ]
+      : []),
+    ...(stats.dropped > 0
+      ? [
+          {
+            label: "Dropped",
+            value: stats.dropped,
+            Icon: XCircleIcon,
+            color: "text-zinc-500",
+          },
+        ]
+      : []),
     {
       label: "Total time",
       value: formatMinutes(stats.totalMinutes),

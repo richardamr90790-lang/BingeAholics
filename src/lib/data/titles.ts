@@ -48,6 +48,8 @@ export type Stats = {
   inProgress: number;
   completed: number;
   planned: number;
+  onHold: number;
+  dropped: number;
   totalMinutes: number;
 };
 
@@ -66,6 +68,8 @@ export async function getStats(): Promise<Stats> {
     inProgress: rows.filter((r) => r.status === "in_progress").length,
     completed: rows.filter((r) => r.status === "completed").length,
     planned: rows.filter((r) => r.status === "planned").length,
+    onHold: rows.filter((r) => r.status === "on_hold").length,
+    dropped: rows.filter((r) => r.status === "dropped").length,
     totalMinutes: rows.reduce((s, r) => s + (r.minutes || 0), 0),
   };
 }

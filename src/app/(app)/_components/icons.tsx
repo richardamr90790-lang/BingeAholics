@@ -202,3 +202,20 @@ export function GradCapIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function PauseIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <path d="M9 5v14M15 5v14" />
+    </svg>
+  );
+}
+
+export function XCircleIcon({ className }: IconProps) {
+  return (
+    <svg {...base(className)}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15 9-6 6M9 9l6 6" />
+    </svg>
+  );
+}
