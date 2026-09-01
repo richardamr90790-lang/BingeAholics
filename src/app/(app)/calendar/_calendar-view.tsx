@@ -122,7 +122,7 @@ export function CalendarView({
               <select
                 value={month}
                 onChange={(e) => goTo(year, Number(e.target.value))}
-                className="rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm font-medium text-white outline-none focus:border-violet-500/70"
+                className="rounded-lg border border-white/10 bg-[#0b0b12] px-2 py-1.5 text-sm font-medium text-violet-300 outline-none focus:border-violet-500/70 [&_option]:bg-[#0b0b12] [&_option]:text-violet-300"
               >
                 {MONTH_NAMES.map((name, i) => (
                   <option key={name} value={i + 1}>
@@ -133,7 +133,7 @@ export function CalendarView({
               <select
                 value={year}
                 onChange={(e) => goTo(Number(e.target.value), month)}
-                className="rounded-lg border border-white/10 bg-black/40 px-2 py-1.5 text-sm font-medium text-white outline-none focus:border-violet-500/70"
+                className="rounded-lg border border-white/10 bg-[#0b0b12] px-2 py-1.5 text-sm font-medium text-violet-300 outline-none focus:border-violet-500/70 [&_option]:bg-[#0b0b12] [&_option]:text-violet-300"
               >
                 {yearOptions.map((y) => (
                   <option key={y} value={y}>
