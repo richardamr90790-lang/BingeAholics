@@ -381,6 +381,41 @@ export async function generateCover(
   revalidateApp();
 }
 
+// Reads the public title + thumbnail for a YouTube link via the keyless oEmbed
+// endpoint (server-side, so no CORS). Used by the Add-title dialog to autofill.
+export async function youtubeMeta(url: string): Promise<{
+  title?: string;
+  thumbnail?: string;
+  error?: string;
+}> {
+  let host: string;
+  try {
+    host = new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return { error: "That doesn't look like a valid URL." };
+  }
+  if (!["youtube.com", "m.youtube.com", "youtu.be"].includes(host))
+    return { error: "That's not a YouTube link." };
+
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(url)}`,
+      { cache: "no-store" },
+    );
+    if (res.status === 401 || res.status === 403)
+      return { error: "That video is private or embedding is disabled." };
+    if (res.status === 404) return { error: "No video found at that link." };
+    if (!res.ok) return { error: "Couldn't reach YouTube. Try again." };
+    const data = (await res.json()) as {
+      title?: string;
+      thumbnail_url?: string;
+    };
+    return { title: data.title, thumbnail: data.thumbnail_url };
+  } catch {
+    return { error: "Couldn't read that video. Try again." };
+  }
+}
+
 export async function updateDisplayName(name: string): Promise<ActionResult> {
   const supabase = await createClient();
   const clean = name.trim().slice(0, 40);

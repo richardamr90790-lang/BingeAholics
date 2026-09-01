@@ -2,43 +2,14 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import {
-  DashboardIcon,
-  PlayCircleIcon,
-  LibraryIcon,
-  HistoryIcon,
-  StatsIcon,
-  CalendarIcon,
-  SettingsIcon,
-} from "./icons";
-
-const NAV = [
-  { href: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
-  {
-    href: "/library?status=in_progress",
-    label: "One More.....",
-    Icon: PlayCircleIcon,
-  },
-  { href: "/library", label: "My Binge Vault", Icon: LibraryIcon },
-  { href: "/stats", label: "Binge Stats", Icon: StatsIcon },
-  { href: "/history", label: "History", Icon: HistoryIcon },
-  { href: "/calendar", label: "Calendar", Icon: CalendarIcon },
-  { href: "/settings", label: "Settings", Icon: SettingsIcon },
-];
+import { NAV, navIsActive } from "./nav-items";
 
 export function Sidebar() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const inProgress = searchParams.get("status") === "in_progress";
 
-  function isActive(href: string) {
-    const [path, query] = href.split("?");
-    if (path === "/library") {
-      if (pathname !== "/library") return false;
-      return query ? inProgress : !inProgress;
-    }
-    return pathname === path || pathname.startsWith(path + "/");
-  }
+  const isActive = (href: string) => navIsActive(href, pathname, inProgress);
 
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-[#0c0c12]/20 backdrop-blur-md lg:flex">

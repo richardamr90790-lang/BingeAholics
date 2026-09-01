@@ -8,6 +8,7 @@ import {
 } from "@/lib/data/titles";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
+import { SearchBox } from "./_search-box";
 
 // AI cover generation (a Server Action reached from the title cards / add
 // dialog on this page) can take longer than the default function budget.
@@ -18,9 +19,10 @@ const STATUSES = Object.keys(STATUS_LABELS) as TitleStatus[];
 export default async function LibraryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; status?: string }>;
+  searchParams: Promise<{ category?: string; status?: string; q?: string }>;
 }) {
-  const { category, status } = await searchParams;
+  const { category, status, q: qParam } = await searchParams;
+  const q = (qParam ?? "").trim();
 
   const activeCategory = CATEGORIES.find((c) => c.key === category)?.key;
   const catTypes = activeCategory ? categoryTypes(activeCategory) : null;
@@ -33,6 +35,10 @@ export default async function LibraryPage({
     ...(activeStatus ? { status: activeStatus } : {}),
   });
 
+  const shown = q
+    ? titles.filter((t) => t.title.toLowerCase().includes(q.toLowerCase()))
+    : titles;
+
   const heading =
     activeStatus === "in_progress"
       ? "One More....."
@@ -42,6 +48,11 @@ export default async function LibraryPage({
           ? CATEGORIES.find((c) => c.key === activeCategory)!.label
           : "My Binge Vault";
 
+  const withQ = (base: string) =>
+    q
+      ? `${base}${base.includes("?") ? "&" : "?"}q=${encodeURIComponent(q)}`
+      : base;
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -49,20 +60,23 @@ export default async function LibraryPage({
         <AddTitleButton />
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <Tab
-          href="/library"
-          label="All"
-          active={!activeCategory && !activeStatus}
-        />
-        {CATEGORIES.map((c) => (
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2">
           <Tab
-            key={c.key}
-            href={`/library?category=${c.key}`}
-            label={c.label}
-            active={activeCategory === c.key}
+            href={withQ("/library")}
+            label="All"
+            active={!activeCategory && !activeStatus}
           />
-        ))}
+          {CATEGORIES.map((c) => (
+            <Tab
+              key={c.key}
+              href={withQ(`/library?category=${c.key}`)}
+              label={c.label}
+              active={activeCategory === c.key}
+            />
+          ))}
+        </div>
+        <SearchBox />
       </div>
 
       {activeStatus && (
@@ -74,20 +88,22 @@ export default async function LibraryPage({
         </p>
       )}
 
-      {titles.length === 0 ? (
+      {shown.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-14 text-center">
           <p className="text-sm text-zinc-500">
-            {activeStatus
-              ? `Nothing ${heading.toLowerCase()}.`
-              : activeCategory
-                ? `Nothing to ${activeCategory} yet.`
-                : "Nothing here yet."}
+            {q
+              ? `No titles match “${q}”.`
+              : activeStatus
+                ? `Nothing ${heading.toLowerCase()}.`
+                : activeCategory
+                  ? `Nothing to ${activeCategory} yet.`
+                  : "Nothing here yet."}
           </p>
-          <AddTitleButton label="Add a title" variant="ghost" />
+          {!q && <AddTitleButton label="Add a title" variant="ghost" />}
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {titles.map((t) => (
+          {shown.map((t) => (
             <TitleCard key={t.id} title={t} />
           ))}
         </div>

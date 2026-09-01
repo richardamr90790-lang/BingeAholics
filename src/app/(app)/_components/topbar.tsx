@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signOut } from "@/app/actions";
 import { ChevronDownIcon } from "./icons";
 import { Avatar } from "./avatar";
+import { MobileNav } from "./mobile-nav";
 
 export function Topbar({
   email,
@@ -17,6 +18,7 @@ export function Topbar({
 
   return (
     <header className="sticky top-0 z-20 flex items-center justify-end gap-3 border-b border-white/5 bg-[#0b0b12]/15 px-4 py-3 backdrop-blur-md sm:px-6">
+      <MobileNav />
       <div className="relative">
         <button
           onClick={() => setMenuOpen((v) => !v)}

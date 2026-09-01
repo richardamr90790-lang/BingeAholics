@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { createTitle, generateCover } from "../actions";
+import { createTitle, generateCover, youtubeMeta } from "../actions";
 import { TYPE_LABELS, type TitleType } from "@/lib/titles";
 import { CoverInput } from "./cover-input";
 
@@ -29,8 +29,18 @@ export function AddTitleDialog({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const [titleValue, setTitleValue] = useState("");
+  const [type, setType] = useState<TitleType>("other");
   const [unitLabel, setUnitLabel] = useState("Part");
+  const [linkValue, setLinkValue] = useState("");
   const [autoCover, setAutoCover] = useState(true);
+
+  const [ytUrl, setYtUrl] = useState("");
+  const [ytLoading, setYtLoading] = useState(false);
+  const [ytError, setYtError] = useState<string | null>(null);
+  const [thumb, setThumb] = useState("");
+  const [coverKey, setCoverKey] = useState(0);
 
   useEffect(() => {
     if (!open) return;
@@ -41,11 +51,33 @@ export function AddTitleDialog({
 
   if (!open || typeof document === "undefined") return null;
 
+  async function fillFromYouTube() {
+    const url = ytUrl.trim();
+    if (!url) return;
+    setYtError(null);
+    setYtLoading(true);
+    const res = await youtubeMeta(url);
+    setYtLoading(false);
+    if (res.error) {
+      setYtError(res.error);
+      return;
+    }
+    if (res.title) setTitleValue(res.title);
+    setType("video");
+    setUnitLabel("Part");
+    setLinkValue(url);
+    if (res.thumbnail) {
+      setThumb(res.thumbnail);
+      setCoverKey((k) => k + 1);
+    }
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     const formData = new FormData(e.currentTarget);
-    const wantsCover = autoCover && !String(formData.get("cover_url") ?? "").trim();
+    const wantsCover =
+      autoCover && !String(formData.get("cover_url") ?? "").trim();
     startTransition(async () => {
       const res = await createTitle(formData);
       if (res?.error) {
@@ -74,13 +106,44 @@ export function AddTitleDialog({
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#14141c] p-6 shadow-2xl">
+      <div className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-[#14141c] p-6 shadow-2xl">
         <h2 className="text-lg font-semibold text-white">Add a title</h2>
         <p className="mt-1 text-sm text-zinc-400">
           Track anything — an anime, a manhwa recap series, a book.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
+          <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+            <label className="mb-1 block text-xs font-medium text-zinc-300">
+              Paste a YouTube link{" "}
+              <span className="text-zinc-600">— auto-fills the rest</span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={ytUrl}
+                onChange={(e) => setYtUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    fillFromYouTube();
+                  }
+                }}
+                placeholder="https://youtube.com/watch?v=…"
+                className={inputClass}
+              />
+              <button
+                type="button"
+                onClick={fillFromYouTube}
+                disabled={ytLoading || !ytUrl.trim()}
+                className="shrink-0 rounded-lg border border-white/15 px-3 text-sm text-zinc-200 transition hover:bg-white/5 disabled:opacity-40"
+              >
+                {ytLoading ? "…" : "Fill"}
+              </button>
+            </div>
+            {ytError && <p className="mt-1 text-xs text-red-400">{ytError}</p>}
+          </div>
+
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">
               Title
@@ -89,6 +152,8 @@ export function AddTitleDialog({
               name="title"
               required
               autoFocus
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
               placeholder="Solo Leveling (Recap)"
               className={inputClass}
             />
@@ -101,12 +166,12 @@ export function AddTitleDialog({
               </label>
               <select
                 name="type"
-                defaultValue="other"
-                onChange={(e) =>
-                  setUnitLabel(
-                    TYPE_DEFAULT_UNIT[e.target.value as TitleType] ?? "Part",
-                  )
-                }
+                value={type}
+                onChange={(e) => {
+                  const next = e.target.value as TitleType;
+                  setType(next);
+                  setUnitLabel(TYPE_DEFAULT_UNIT[next] ?? "Part");
+                }}
                 className={inputClass}
               >
                 {Object.entries(TYPE_LABELS).map(([value, label]) => (
@@ -157,7 +222,7 @@ export function AddTitleDialog({
             </div>
           </div>
 
-          <CoverInput />
+          <CoverInput key={coverKey} initialUrl={thumb} />
 
           <label className="flex items-start gap-2 text-xs text-zinc-400">
             <input
@@ -182,6 +247,8 @@ export function AddTitleDialog({
             <input
               name="link_url"
               type="url"
+              value={linkValue}
+              onChange={(e) => setLinkValue(e.target.value)}
               placeholder="https://…"
               className={inputClass}
             />
