@@ -12,7 +12,7 @@ import {
   type Category,
 } from "@/lib/data/titles";
 import { listEventsForMonth } from "@/lib/data/calendar";
-import { listActivity } from "@/lib/data/activity";
+import { listActivity, getStreak } from "@/lib/data/activity";
 import { TitleCard } from "../_components/title-card";
 import { AddTitleButton } from "../_components/add-title-button";
 import { MiniCalendar } from "./_mini-calendar";
@@ -64,14 +64,21 @@ export default async function DashboardPage({
   const vaultTypes = categoryTypes(activeCat) ?? [];
 
   const now = new Date();
-  const [continueWatching, stats, library, calendarEvents, recentActivity] =
-    await Promise.all([
-      getContinueWatching(),
-      getStats(),
-      listTitles(),
-      listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
-      listActivity(5),
-    ]);
+  const [
+    continueWatching,
+    stats,
+    library,
+    calendarEvents,
+    recentActivity,
+    streak,
+  ] = await Promise.all([
+    getContinueWatching(),
+    getStats(),
+    listTitles(),
+    listEventsForMonth(now.getFullYear(), now.getMonth() + 1),
+    listActivity(5),
+    getStreak(),
+  ]);
 
   const vaultTitles = library.filter((t) => vaultTypes.includes(t.type));
   const oneMore = continueWatching.filter((t) => vaultTypes.includes(t.type));
@@ -230,6 +237,11 @@ export default async function DashboardPage({
 
         <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
           <div className="min-w-0 space-y-8">
+            <div className="flex items-center justify-between gap-3">
+              <StreakBadge days={streak} />
+              <AddTitleButton />
+            </div>
+
             <section>
               <div className="mb-3 flex items-center justify-between">
                 <h2 className="text-xl text-white">One More.....</h2>
@@ -271,6 +283,21 @@ export default async function DashboardPage({
         </div>
       </div>
     </>
+  );
+}
+
+function StreakBadge({ days }: { days: number }) {
+  if (days <= 0) {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs text-zinc-400">
+        🔥 No streak yet — log progress today
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-200">
+      🔥 {days}-day streak
+    </span>
   );
 }
 

@@ -25,6 +25,7 @@ import {
 } from "./icons";
 import { EditTitleDialog } from "./edit-title-dialog";
 import { AdvanceDialog } from "./advance-dialog";
+import { useToast } from "./toast";
 
 const PLACEHOLDER_ICON: Record<TitleType, typeof BookIcon> = {
   anime: TvIcon,
@@ -64,6 +65,7 @@ function CoverPlaceholder({
 
 export function TitleCard({ title: t }: { title: Title }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, startTransition] = useTransition();
   const [menuOpen, setMenuOpen] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -74,7 +76,7 @@ export function TitleCard({ title: t }: { title: Title }) {
   function run(fn: () => Promise<{ error?: string } | undefined>) {
     startTransition(async () => {
       const res = await fn();
-      if (res?.error) alert(res.error);
+      if (res?.error) toast(res.error, "error");
       else router.refresh();
       setMenuOpen(false);
     });
@@ -89,7 +91,7 @@ export function TitleCard({ title: t }: { title: Title }) {
         t.cover_url ? Math.floor(Math.random() * 1_000_000) : undefined,
       );
       setCoverBusy(false);
-      if (res?.error) alert(res.error);
+      if (res?.error) toast(res.error, "error");
       else router.refresh();
     });
   }

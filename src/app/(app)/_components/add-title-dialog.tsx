@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { createTitle, generateCover, youtubeMeta } from "../actions";
 import { TYPE_LABELS, type TitleType } from "@/lib/titles";
 import { CoverInput } from "./cover-input";
+import { useToast } from "./toast";
 
 const TYPE_DEFAULT_UNIT: Record<TitleType, string> = {
   anime: "Episode",
@@ -27,6 +28,7 @@ export function AddTitleDialog({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const toast = useToast();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -89,7 +91,8 @@ export function AddTitleDialog({
           // Detached: runs as its own request; the card shows its placeholder
           // until this lands, then we refresh again.
           generateCover(res.id).then((r) => {
-            if (!r?.error) router.refresh();
+            if (r?.error) toast(`Cover generation failed: ${r.error}`, "error");
+            else router.refresh();
           });
         }
       }
