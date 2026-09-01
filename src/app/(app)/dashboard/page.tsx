@@ -75,9 +75,10 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="space-y-8">
-        {/* Full-width hero banner: welcome on the left, stats on the right, one
-            continuous piece of artwork across the whole top */}
-        <section className="relative overflow-hidden rounded-2xl border border-white/10">
+        {/* Full-bleed hero banner: breaks out of <main>'s padding so the
+            artwork sits flush against the sidebar, the right edge and the
+            topbar. Welcome on the left, stats on the right. */}
+        <section className="relative -mx-4 -mt-4 overflow-hidden border-b border-white/10 sm:-mx-6 sm:-mt-6">
           <div
             className="absolute inset-0"
             style={{
