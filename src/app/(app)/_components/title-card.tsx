@@ -95,32 +95,7 @@ export function TitleCard({ title: t }: { title: Title }) {
           <CoverPlaceholder title={t.title} type={t.type} />
         )}
 
-        {t.link_url && (
-          <a
-            href={t.link_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Open link"
-            className="absolute inset-0 z-10"
-          >
-            <span className="absolute left-1.5 top-1.5 grid size-7 place-items-center rounded-md bg-black/60 text-zinc-100 opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
-              <svg
-                viewBox="0 0 24 24"
-                className="size-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
-              </svg>
-            </span>
-          </a>
-        )}
-
-        <div className="absolute right-1.5 top-1.5 z-20">
+        <div className="absolute right-1.5 top-1.5">
           <button
             onClick={() => setMenuOpen((v) => !v)}
             className="grid size-7 place-items-center rounded-md bg-black/60 text-zinc-200 opacity-0 backdrop-blur-sm transition group-hover:opacity-100"
@@ -203,6 +178,32 @@ export function TitleCard({ title: t }: { title: Title }) {
                 style={{ width: `${pct}%` }}
               />
             </div>
+          )}
+          {t.link_url && (
+            <a
+              href={t.link_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="acc-text mb-1.5 inline-flex items-center gap-1 text-[11px] font-medium transition hover:brightness-125"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="size-3"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg>
+              {t.status === "planned"
+                ? "Start"
+                : t.status === "completed"
+                  ? "Revisit"
+                  : "Jump back in"}
+            </a>
           )}
           <div className="flex items-center justify-between">
             <span className="text-xs text-zinc-500">
