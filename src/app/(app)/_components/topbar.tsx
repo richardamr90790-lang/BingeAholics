@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { signOut } from "@/app/actions";
+import { replayOnboarding } from "../actions";
 import { ChevronDownIcon } from "./icons";
 import { Avatar } from "./avatar";
 import { MobileNav } from "./mobile-nav";
+import { useToast } from "./toast";
 
 export function Topbar({
   email,
@@ -15,6 +18,22 @@ export function Topbar({
   avatarId: number | null;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+  const toast = useToast();
+  const [replaying, startReplay] = useTransition();
+
+  function replayTutorial() {
+    setMenuOpen(false);
+    startReplay(async () => {
+      const res = await replayOnboarding();
+      if (res?.error) {
+        toast(res.error, "error");
+        return;
+      }
+      router.push("/dashboard");
+      router.refresh();
+    });
+  }
 
   return (
     <header className="sticky top-0 z-20 flex items-center justify-end gap-3 border-b border-white/5 bg-[#0b0b12]/15 px-4 py-3 backdrop-blur-md sm:px-6">
@@ -48,6 +67,13 @@ export function Topbar({
               >
                 Settings &amp; avatar
               </Link>
+              <button
+                onClick={replayTutorial}
+                disabled={replaying}
+                className="block w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5 disabled:opacity-60"
+              >
+                {replaying ? "Starting…" : "Replay tutorial"}
+              </button>
               <form action={signOut}>
                 <button className="w-full px-3 py-2 text-left text-zinc-200 hover:bg-white/5">
                   Sign out
