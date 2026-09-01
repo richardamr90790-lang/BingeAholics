@@ -126,7 +126,7 @@ export function TitleCard({ title: t }: { title: Title }) {
         <div className="absolute right-1.5 top-1.5">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="grid size-7 place-items-center rounded-md bg-black/60 text-zinc-200 opacity-0 backdrop-blur-sm transition group-hover:opacity-100"
+            className="grid size-8 place-items-center rounded-md bg-black/60 text-zinc-200 backdrop-blur-sm transition lg:size-7 lg:opacity-0 lg:group-hover:opacity-100"
             aria-label="Options"
           >
             <svg viewBox="0 0 24 24" className="size-4 fill-current" aria-hidden>
