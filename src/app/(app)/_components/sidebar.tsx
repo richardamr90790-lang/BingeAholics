@@ -14,11 +14,8 @@ export function Sidebar() {
   return (
     <aside className="hidden w-60 shrink-0 flex-col border-r border-white/5 bg-[#0c0c12]/20 backdrop-blur-md lg:flex">
       <div className="flex items-center gap-2 px-5 py-5">
-        <span className="grid size-8 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
-          <svg viewBox="0 0 24 24" className="size-4 fill-white" aria-hidden>
-            <path d="M8 5.5c0-1.1 1.2-1.8 2.1-1.2l9 6c.9.6.9 1.9 0 2.4l-9 6c-1 .6-2.1-.1-2.1-1.2v-12Z" />
-          </svg>
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-mark.webp" alt="" className="size-8 rounded-lg" />
         <span className="font-display text-xl text-white">Bingeaholics</span>
       </div>
 

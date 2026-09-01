@@ -45,8 +45,16 @@ export function MobileNav() {
             />
             <div className="absolute inset-y-0 left-0 flex w-64 max-w-[80vw] flex-col border-r border-white/10 bg-[#0c0c12] shadow-2xl">
               <div className="flex items-center justify-between px-5 py-5">
-                <span className="font-display text-xl text-white">
-                  Bingeaholics
+                <span className="flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo-mark.webp"
+                    alt=""
+                    className="size-7 rounded-lg"
+                  />
+                  <span className="font-display text-xl text-white">
+                    Bingeaholics
+                  </span>
                 </span>
                 <button
                   onClick={() => setOpen(false)}
