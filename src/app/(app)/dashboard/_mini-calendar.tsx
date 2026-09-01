@@ -34,6 +34,10 @@ export function MiniCalendar({
   const isThisMonth =
     year === now.getFullYear() && month === now.getMonth() + 1;
   const todayDay = now.getDate();
+  const yearOptions = Array.from(
+    { length: 9 },
+    (_, i) => now.getFullYear() - 3 + i,
+  );
 
   useEffect(() => {
     if (isInitial) return;
@@ -92,10 +96,33 @@ export function MiniCalendar({
         </Link>
       </div>
 
-      <div className="mt-3 flex items-center justify-between">
-        <p className="text-sm font-medium text-zinc-300">
-          {MONTH_NAMES[month - 1]} {year}
-        </p>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1">
+          <select
+            value={month}
+            onChange={(e) => setMonth(Number(e.target.value))}
+            aria-label="Month"
+            className="rounded-md border border-white/10 bg-white/[0.03] px-1.5 py-1 text-xs font-medium text-zinc-200 outline-none focus:border-violet-500/70"
+          >
+            {MONTH_NAMES.map((name, i) => (
+              <option key={name} value={i + 1}>
+                {name}
+              </option>
+            ))}
+          </select>
+          <select
+            value={year}
+            onChange={(e) => setYear(Number(e.target.value))}
+            aria-label="Year"
+            className="rounded-md border border-white/10 bg-white/[0.03] px-1.5 py-1 text-xs font-medium text-zinc-200 outline-none focus:border-violet-500/70"
+          >
+            {yearOptions.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="flex items-center gap-1">
           {!isThisMonth && (
             <button
