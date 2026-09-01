@@ -150,6 +150,18 @@ export function AddTitleDialog({
 
           <CoverInput />
 
+          <div>
+            <label className="mb-1 block text-xs font-medium text-zinc-400">
+              Link <span className="text-zinc-600">(where to watch / read)</span>
+            </label>
+            <input
+              name="link_url"
+              type="url"
+              placeholder="https://…"
+              className={inputClass}
+            />
+          </div>
+
           {error && <p className="text-sm text-red-400">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-1">

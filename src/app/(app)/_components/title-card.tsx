@@ -88,13 +88,39 @@ export function TitleCard({ title: t }: { title: Title }) {
             src={t.cover_url}
             alt=""
             className="size-full object-cover"
+            style={{ objectPosition: t.cover_position || "50% 50%" }}
             loading="lazy"
           />
         ) : (
           <CoverPlaceholder title={t.title} type={t.type} />
         )}
 
-        <div className="absolute right-1.5 top-1.5">
+        {t.link_url && (
+          <a
+            href={t.link_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open link"
+            className="absolute inset-0 z-10"
+          >
+            <span className="absolute left-1.5 top-1.5 grid size-7 place-items-center rounded-md bg-black/60 text-zinc-100 opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
+              <svg
+                viewBox="0 0 24 24"
+                className="size-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+              </svg>
+            </span>
+          </a>
+        )}
+
+        <div className="absolute right-1.5 top-1.5 z-20">
           <button
             onClick={() => setMenuOpen((v) => !v)}
             className="grid size-7 place-items-center rounded-md bg-black/60 text-zinc-200 opacity-0 backdrop-blur-sm transition group-hover:opacity-100"

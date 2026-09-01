@@ -178,7 +178,23 @@ export function EditTitleDialog({
             />
           </div>
 
-          <CoverInput initialUrl={t.cover_url ?? ""} />
+          <CoverInput
+            initialUrl={t.cover_url ?? ""}
+            initialPos={t.cover_position}
+          />
+
+          <div>
+            <label className="mb-1 block text-xs font-medium text-zinc-400">
+              Link <span className="text-zinc-600">(where to watch / read)</span>
+            </label>
+            <input
+              name="link_url"
+              type="url"
+              defaultValue={t.link_url ?? ""}
+              placeholder="https://…"
+              className={inputClass}
+            />
+          </div>
 
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">

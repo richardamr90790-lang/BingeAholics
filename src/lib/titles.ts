@@ -28,6 +28,8 @@ export type Title = {
   current_unit: number;
   status: TitleStatus;
   cover_url: string | null;
+  cover_position: string;
+  link_url: string | null;
   rating: number | null;
   notes: string | null;
   minutes: number;

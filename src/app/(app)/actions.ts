@@ -9,6 +9,13 @@ import { isAvatarId } from "@/lib/avatar";
 
 export type ActionResult = { error?: string } | undefined;
 
+function normalizePosition(raw: string): string {
+  const m = /^\s*(\d{1,3})%\s+(\d{1,3})%\s*$/.exec(raw);
+  if (!m) return "50% 50%";
+  const clamp = (n: number) => Math.min(100, Math.max(0, n));
+  return `${clamp(Number(m[1]))}% ${clamp(Number(m[2]))}%`;
+}
+
 function revalidateApp() {
   revalidatePath("/dashboard");
   revalidatePath("/library");
@@ -61,6 +68,10 @@ export async function createTitle(formData: FormData): Promise<ActionResult> {
     : 0;
 
   const cover_url = String(formData.get("cover_url") ?? "").trim() || null;
+  const link_url = String(formData.get("link_url") ?? "").trim() || null;
+  const cover_position = normalizePosition(
+    String(formData.get("cover_position") ?? ""),
+  );
 
   let status: Title["status"] = "planned";
   if (current_unit > 0) status = "in_progress";
@@ -79,6 +90,8 @@ export async function createTitle(formData: FormData): Promise<ActionResult> {
       current_unit,
       status,
       cover_url,
+      cover_position,
+      link_url,
       started_at: current_unit > 0 ? nowIso : null,
       completed_at: status === "completed" ? nowIso : null,
     })
@@ -224,6 +237,10 @@ export async function updateTitle(
     : 0;
 
   const cover_url = String(formData.get("cover_url") ?? "").trim() || null;
+  const link_url = String(formData.get("link_url") ?? "").trim() || null;
+  const cover_position = normalizePosition(
+    String(formData.get("cover_position") ?? ""),
+  );
   const status = String(formData.get("status") ?? "planned") as Title["status"];
   const notes = String(formData.get("notes") ?? "").trim() || null;
 
@@ -242,6 +259,8 @@ export async function updateTitle(
     total_units,
     current_unit,
     cover_url,
+    cover_position,
+    link_url,
     status,
     rating,
     minutes,
